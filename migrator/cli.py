@@ -148,11 +148,14 @@ def main():
     parser.add_argument(
         "--commits-per-slice",
         type=int,
-        default=500,
+        default=None,
         metavar="N",
         help=(
-            "Number of commits to push per slice when migrating large branches "
-            "(default: 500). Reduce this if you hit GitHub's 2 GB push limit."
+            "Split branch history into slices of N commits per push. "
+            "Disabled by default — the full mirror is pushed in a single call. "
+            "Enable this (e.g. --commits-per-slice 200) only if the push fails "
+            "due to GitHub's 2 GB per-push limit. "
+            "A warning is emitted automatically when the mirror exceeds 2 GB."
         )
     )
     parser.add_argument(
@@ -195,7 +198,7 @@ def main():
             )
 
     # ── Token resolution ─────────────────────────────────────────────────
-    default_csv_path = Path(__file__).resolve().parent.parent / "tokens.csv"
+    default_csv_path = Path.cwd() / "tokens.csv"
     tokens_csv_path = Path(args.tokens_csv) if args.tokens_csv else default_csv_path
 
     _validate_providers(args)

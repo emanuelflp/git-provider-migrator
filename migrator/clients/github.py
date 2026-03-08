@@ -23,6 +23,7 @@ logger = logging.getLogger("migrator")
 
 _REFS_HEADS = "refs/heads/"
 _REPO_NAME_RE = re.compile(r'^[a-zA-Z0-9._\-]+$')
+_LARGE_REPO_THRESHOLD_MB = 2048  # warn when mirror clone exceeds this size
 
 
 class GitHubMigrator:
@@ -456,13 +457,42 @@ class GitHubMigrator:
         )
         return [c.strip() for c in result.stdout.splitlines() if c.strip()]
 
+    @staticmethod
+    def _get_mirror_size_mb(mirror_path: str) -> float:
+        """Return the total size of the mirror directory in megabytes."""
+        total = sum(
+            os.path.getsize(os.path.join(root, f))
+            for root, _, files in os.walk(mirror_path)
+            for f in files
+        )
+        return total / (1024 * 1024)
+
+    def _push_full_mirror(
+        self,
+        mirror_path: str,
+        remote_url: str,
+        log: "RepoLogger",
+    ) -> None:
+        """Push all refs to GitHub using a single ``git push --mirror`` call."""
+        log.info("Pushing all refs (full mirror)...")
+        log.debug(f"$ git push --mirror {_redact_url(remote_url)}  (cwd={mirror_path})")
+        result = subprocess.run(
+            ["git", "push", "--mirror", remote_url],
+            capture_output=True, text=True, cwd=mirror_path,
+        )
+        log.debug(f"  stdout: {result.stdout.strip()}")
+        log.debug(f"  stderr: {result.stderr.strip()}")
+        if result.returncode != 0:
+            raise RuntimeError(f"git push --mirror failed: {result.stderr.strip()}")
+        log.info("✓ Full mirror push complete")
+
     def _push_branch_in_slices(
         self,
         mirror_path: str,
         remote_url: str,
         ref: str,
         log: "RepoLogger",
-        commits_per_slice: int = 500,
+        commits_per_slice: Optional[int] = None,
     ) -> None:
         """
         Push a single branch to GitHub in chronological commit slices.
@@ -525,7 +555,7 @@ class GitHubMigrator:
         mirror_path: str,
         remote_url: str,
         log: "RepoLogger",
-        commits_per_slice: int = 500,
+        commits_per_slice: Optional[int] = None,
     ) -> None:
         """
         Push all refs to GitHub, splitting large branches into commit slices
@@ -714,13 +744,19 @@ class GitHubMigrator:
         repo_name: str,
         mirror_path: str,
         enable_lfs: bool,
-        commits_per_slice: int,
+        commits_per_slice: Optional[int],
         log: "RepoLogger",
     ) -> None:
         """
         Clone the source repo as a mirror and push all refs to GitHub.
 
-        Handles Git LFS fetching, large-blob conversion, and sliced pushes.
+        By default (``commits_per_slice=None``) a single ``git push --mirror`` is used.
+        If the cloned mirror is larger than ``_LARGE_REPO_THRESHOLD_MB`` MB and slice
+        mode is not enabled, a warning with usage instructions is emitted.
+
+        Set ``commits_per_slice`` to a positive integer to split large branches into
+        commit slices (useful when the repo exceeds GitHub's 2 GB per-push limit).
+
         Raises RuntimeError on git command failures.
         """
         owner = self.github_org if self.github_org else self.get_github_user()
@@ -741,6 +777,17 @@ class GitHubMigrator:
             )
             log.debug(f"git clone stdout: {clone_result.stdout.strip()}")
             log.debug(f"git clone stderr: {clone_result.stderr.strip()}")
+
+            # ── Large-repo warning ───────────────────────────────────────────
+            size_mb = self._get_mirror_size_mb(mirror_path)
+            log.debug(f"Mirror size: {size_mb:.1f} MB")
+            if commits_per_slice is None and size_mb > _LARGE_REPO_THRESHOLD_MB:
+                log.warning(
+                    f"Repository mirror is {size_mb:.0f} MB "
+                    f"(threshold: {_LARGE_REPO_THRESHOLD_MB} MB). "
+                    "If the push fails due to GitHub's 2 GB limit, re-run with "
+                    "--commits-per-slice 200 to push in smaller batches."
+                )
 
             if enable_lfs and _lfs_available() and self._repo_uses_lfs(mirror_path):
                 log.info("LFS objects detected — fetching all LFS objects from GitLab...")
@@ -767,12 +814,19 @@ class GitHubMigrator:
                 self._migrate_large_blobs_to_lfs(mirror_path, log)
 
             log.info(f"Pushing to {owner}/{repo_name} ...")
-            self._push_in_batches(
-                mirror_path=mirror_path,
-                remote_url=github_push_url,
-                log=log,
-                commits_per_slice=commits_per_slice,
-            )
+            if commits_per_slice is None:
+                self._push_full_mirror(
+                    mirror_path=mirror_path,
+                    remote_url=github_push_url,
+                    log=log,
+                )
+            else:
+                self._push_in_batches(
+                    mirror_path=mirror_path,
+                    remote_url=github_push_url,
+                    log=log,
+                    commits_per_slice=commits_per_slice,
+                )
 
             if enable_lfs and _lfs_available() and self._repo_uses_lfs(mirror_path):
                 log.info("Pushing LFS objects to GitHub...")
@@ -808,7 +862,7 @@ class GitHubMigrator:
         archive_synced: bool = False,
         log: Optional["RepoLogger"] = None,
         enable_lfs: bool = True,
-        commits_per_slice: int = 500,
+        commits_per_slice: Optional[int] = None,
     ) -> Dict:
         """
         Migrate a repository from GitLab to GitHub via git clone --mirror + push.
@@ -891,7 +945,7 @@ class GitHubMigrator:
         gitlab_project_id: Optional[int] = None,
         archive_synced: bool = False,
         enable_lfs: bool = True,
-        commits_per_slice: int = 500,
+        commits_per_slice: Optional[int] = None,
     ) -> Tuple[bool, str]:
         """
         Migrate a single repository from GitLab to GitHub.
@@ -939,7 +993,7 @@ class GitHubMigrator:
         errors_reporter: Optional["ErrorsReporter"] = None,
         workers: int = 1,
         enable_lfs: bool = True,
-        commits_per_slice: int = 500,
+        commits_per_slice: Optional[int] = None,
     ) -> Dict[str, Dict]:
         """
         Migrate multiple repositories from GitLab to GitHub.

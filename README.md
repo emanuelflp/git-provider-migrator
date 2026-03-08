@@ -148,9 +148,13 @@ export GITHUB_TOKEN="ghp_..."
 
 Tokens are resolved in this order of priority:
 
-1. CLI flags (`--github-token`, `--gitlab-token`)
-2. `tokens.csv` file in the project directory
-3. Environment variables (`GITHUB_TOKEN`, `GITLAB_TOKEN`)
+| Priority | Source | Details |
+|----------|--------|---------|
+| 1 | CLI flags | `--github-token`, `--gitlab-token` |
+| 2 | `tokens.csv` | Looked up in the **current working directory** by default; override with `--tokens-csv <path>` |
+| 3 | Environment variables | `GITHUB_TOKEN`, `GITLAB_TOKEN` |
+
+If a token is not found via any of the three sources, the tool exits with an error.
 
 ---
 
@@ -252,27 +256,56 @@ git-provider-migrator --from-gitlab \
 
 ## CLI Reference
 
+### Provider selection
+
 | Flag | Default | Description |
 |---|---|---|
-| `--source-provider` | `gitlab` | Source Git provider (`gitlab`, `github`, `bitbucket`) |
-| `--dest-provider` | `github` | Destination Git provider (`github`) |
-| `--github-token` | `$GITHUB_TOKEN` | GitHub personal access token (destination) |
+| `--source-provider` | `gitlab` | Source Git provider: `gitlab`, `github`, `bitbucket` |
+| `--dest-provider` | `github` | Destination Git provider (only `github` supported) |
+
+### Authentication
+
+| Flag | Default | Description |
+|---|---|---|
+| `--github-token` | `$GITHUB_TOKEN` | GitHub personal access token |
 | `--gitlab-token` | `$GITLAB_TOKEN` | Source provider personal access token |
-| `--github-org` | *(user account)* | Migrate into a GitHub organization |
+| `--tokens-csv` | `./tokens.csv` | Path to a CSV file with `github_token` and `gitlab_token` columns (defaults to `tokens.csv` in the current directory) |
+
+### Single-repo migration
+
+| Flag | Default | Description |
+|---|---|---|
 | `--source-url` | — | Source repository HTTPS URL |
 | `--repo-name` | — | Target repository name on GitHub |
-| `--private` / `--public` | `--private` | Repository visibility |
-| `--batch-file` | — | JSON file with list of repositories |
-| `--from-gitlab` | — | Fetch repository list from GitLab API (requires `--source-provider gitlab`) |
-| `--gitlab-namespace` | *(authenticated user)* | GitLab group or username (only with `--source-provider gitlab`) |
-| `--gitlab-base-url` | `https://gitlab.com` | GitLab instance base URL (only with `--source-provider gitlab`) |
+| `--private` | `true` | Create the repository as private |
+| `--public` | — | Create the repository as public |
+| `--description` | — | Description for the new repository |
+
+### Batch migration
+
+| Flag | Default | Description |
+|---|---|---|
+| `--batch-file` | — | Path to a JSON file listing repositories to migrate |
+| `--from-gitlab` | — | Fetch repository list from the GitLab API (requires `--source-provider gitlab`) |
+| `--gitlab-namespace` | *(authenticated user)* | GitLab group path or username (only with `--source-provider gitlab`) |
+| `--gitlab-base-url` | `https://gitlab.com` | GitLab instance URL (only with `--source-provider gitlab`) |
+
+### Destination
+
+| Flag | Default | Description |
+|---|---|---|
+| `--github-org` | *(user account)* | Migrate into a GitHub organization instead of the user account |
+
+### Behaviour
+
+| Flag | Default | Description |
+|---|---|---|
+| `--archive-synced` | `false` | Archive the source project after all branches sync (GitLab only) |
 | `--workers` | `1` | Number of parallel migration threads |
-| `--commits-per-slice` | `500` | Commits per push slice (reduce for very large repos) |
-| `--archive-synced` | `false` | Archive the source project after successful sync (only with `--source-provider gitlab`) |
-| `--skip-lfs` | `false` | Skip Git LFS object transfer |
+| `--commits-per-slice` | *(disabled)* | Push branches in slices of N commits. Use only when the push fails due to GitHub's 2 GB limit (e.g. `--commits-per-slice 200`). A warning is shown automatically when the mirror exceeds 2 GB. |
+| `--skip-lfs` | `false` | Skip Git LFS binary object transfer |
 | `--errors-output` | `migration_errors_<ts>.csv` | Path for the error report CSV |
-| `--tokens-csv` | `tokens.csv` | Path to CSV file containing tokens |
-| `--debug` | `false` | Enable verbose debug logging |
+| `--debug` | `false` | Enable verbose DEBUG logging |
 
 ---
 
