@@ -15,7 +15,6 @@ from migrator.formatting.repo_logger import RepoLogger
 from migrator.utils.urls import _redact_url
 from migrator.utils.lfs import _lfs_available
 from migrator.reporting.errors import ErrorsReporter
-from github import Github, Auth, GithubException, UnknownObjectException
 
 if TYPE_CHECKING:
     from migrator.clients.gitlab import GitLabClient
@@ -24,7 +23,6 @@ logger = logging.getLogger("migrator")
 
 _REFS_HEADS = "refs/heads/"
 _REPO_NAME_RE = re.compile(r'^[a-zA-Z0-9._\-]+$')
-_LARGE_REPO_THRESHOLD_MB = 2048  # warn when mirror clone exceeds this size
 
 
 class GitHubMigrator:
@@ -40,23 +38,26 @@ class GitHubMigrator:
         """
         self.github_token = github_token
         self.github_org = github_org
-        self._gh = Github(auth=Auth.Token(github_token))
-        self._cached_user: Optional[str] = None
+        self.github_api_base = "https://api.github.com"
+        self.headers = {
+            "Authorization": f"token {github_token}",
+            "Accept": "application/vnd.github.v3+json"
+        }
 
     def get_github_user(self) -> str:
         """Get the authenticated GitHub user"""
-        if self._cached_user is None:
-            self._cached_user = self._gh.get_user().login
-        return self._cached_user
+        response = requests.get(
+            f"{self.github_api_base}/user",
+            headers=self.headers
+        )
+        response.raise_for_status()
+        return response.json()["login"]
 
     def _safe_repo_name(self, repo_name: str) -> str:
         """Validate repo_name contains only safe characters for URL path construction."""
         if not _REPO_NAME_RE.match(repo_name):
             raise ValueError(f"Invalid repository name: {repo_name!r}")
         return repo_name
-
-    def _get_owner(self) -> str:
-        return self.github_org if self.github_org else self.get_github_user()
 
     def check_repo_exists(self, repo_name: str) -> Optional[Dict]:
         """
@@ -66,35 +67,33 @@ class GitHubMigrator:
             The repo info dict if it exists, None otherwise.
         """
         repo_name = self._safe_repo_name(repo_name)
-        owner = self._get_owner()
-        logger.debug(f"check_repo_exists → GET /repos/{owner}/{repo_name}")
-        try:
-            repo = self._gh.get_repo(f"{owner}/{repo_name}")
-            logger.debug("check_repo_exists ← 200")
-            return {
-                "name": repo.name,
-                "full_name": repo.full_name,
-                "private": repo.private,
-                "default_branch": repo.default_branch,
-            }
-        except UnknownObjectException:
-            logger.debug("check_repo_exists ← 404")
+        owner = self.github_org if self.github_org else self.get_github_user()
+        url = f"{self.github_api_base}/repos/{owner}/{repo_name}"
+        logger.debug(f"check_repo_exists → GET {url}")
+
+        response = requests.get(url, headers=self.headers)
+        logger.debug(f"check_repo_exists ← {response.status_code}")
+
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 404:
             return None
-        except GithubException as exc:
-            raise
+        else:
+            response.raise_for_status()
 
     def get_github_latest_commit(self, repo_name: str, branch: str) -> Optional[str]:
         """Return the latest commit SHA on *branch* from the GitHub repo, or None."""
         repo_name = self._safe_repo_name(repo_name)
-        owner = self._get_owner()
-        logger.debug(f"get_github_latest_commit → branch={branch}")
-        try:
-            repo = self._gh.get_repo(f"{owner}/{repo_name}")
-            sha = repo.get_branch(branch).commit.sha
-            logger.debug(f"get_github_latest_commit sha={sha}")
+        owner = self.github_org if self.github_org else self.get_github_user()
+        url = f"{self.github_api_base}/repos/{owner}/{repo_name}/commits/{branch}"
+        logger.debug(f"get_github_latest_commit → GET {url}")
+        response = requests.get(url, headers=self.headers)
+        logger.debug(f"get_github_latest_commit ← {response.status_code}")
+        if response.status_code == 200:
+            sha = response.json().get("sha")
+            logger.debug(f"get_github_latest_commit  sha={sha}")
             return sha
-        except (GithubException, UnknownObjectException):
-            return None
+        return None
 
     def is_repo_empty(self, repo_name: str) -> bool:
         """
@@ -105,27 +104,45 @@ class GitHubMigrator:
         empty array on the /branches endpoint in some edge cases.
         """
         repo_name = self._safe_repo_name(repo_name)
-        owner = self._get_owner()
-        logger.debug(f"is_repo_empty → /repos/{owner}/{repo_name}/git/refs")
-        try:
-            repo = self._gh.get_repo(f"{owner}/{repo_name}")
-            refs = list(repo.get_git_refs())
-            empty = len(refs) == 0
-            logger.debug(f"is_repo_empty: refs={len(refs)} → empty={empty}")
+        owner = self.github_org if self.github_org else self.get_github_user()
+
+        # /git/refs returns 409 for a truly empty repo, 200 with [] if there are no refs,
+        # and 200 with data when there are commits.
+        url = f"{self.github_api_base}/repos/{owner}/{repo_name}/git/refs"
+        logger.debug(f"is_repo_empty → GET {url}")
+        response = requests.get(url, headers=self.headers)
+        logger.debug(f"is_repo_empty ← {response.status_code}")
+
+        if response.status_code == 409:
+            # "Git Repository is empty" — confirmed empty
+            logger.debug("is_repo_empty: 409 Conflict → repo is empty")
+            return True
+        if response.status_code == 200:
+            empty = len(response.json()) == 0
+            logger.debug(f"is_repo_empty: 200, refs={len(response.json())} → empty={empty}")
             return empty
-        except GithubException as exc:
-            if exc.status == 409:
-                logger.debug("is_repo_empty: 409 → repo is empty")
-                return True
-            logger.debug(f"is_repo_empty: unexpected status {exc.status} → assume not empty")
-            return False
+        # Any other status (404, 4xx) — cannot determine, assume not empty
+        logger.debug(f"is_repo_empty: unexpected status {response.status_code} → assume not empty")
+        return False
 
     def get_github_branches(self, repo_name: str) -> List[str]:
         """Return the list of branch names present in the GitHub repo."""
         repo_name = self._safe_repo_name(repo_name)
-        owner = self._get_owner()
-        repo = self._gh.get_repo(f"{owner}/{repo_name}")
-        return [b.name for b in repo.get_branches()]
+        owner = self.github_org if self.github_org else self.get_github_user()
+        branches = []
+        page = 1
+        while True:
+            url = f"{self.github_api_base}/repos/{owner}/{repo_name}/branches"
+            response = requests.get(url, headers=self.headers, params={"per_page": 100, "page": page})
+            response.raise_for_status()
+            data = response.json()
+            if not data:
+                break
+            branches.extend(b["name"] for b in data)
+            if len(data) < 100:
+                break
+            page += 1
+        return branches
 
     def compare_all_branches(
         self,
@@ -245,26 +262,50 @@ class GitHubMigrator:
         # Use GitHub compare API: base=gitlab_sha...head=github_branch
         # "behind_by" tells how many commits the BASE (gitlab) is behind the HEAD (github).
         # If behind_by >= 0 and ahead_by == 0 → github contains all gitlab commits.
-        owner = self._get_owner()
-        repo = self._gh.get_repo(f"{owner}/{repo_name}")
-        log.debug(f"compare_repos → compare {gl_sha[:8]}...{default_branch}")
-        try:
-            comparison = repo.compare(gl_sha, default_branch)
-            ahead_by = comparison.ahead_by
-            behind_by = comparison.behind_by
-            status = comparison.status
+        owner = self.github_org if self.github_org else self.get_github_user()
+        compare_url = (
+            f"{self.github_api_base}/repos/{owner}/{repo_name}/compare/{gl_sha}...{default_branch}"
+        )
+        log.debug(f"compare_repos → GET {compare_url}")
+        response = requests.get(compare_url, headers=self.headers)
+        log.debug(f"compare_repos ← {response.status_code}")
+
+        if response.status_code == 200:
+            data = response.json()
+            status = data.get("status")          # "ahead", "behind", "diverged", "identical"
+            ahead_by = data.get("ahead_by", 0)   # commits github has that gitlab doesn't
+            behind_by = data.get("behind_by", 0) # commits gitlab has that github doesn't
+
             if behind_by == 0:
-                log.info(f"✓ GitHub is ahead by {ahead_by} commit(s) on branch '{default_branch}' — GitLab origin is fully included")
+                # GitHub contains all commits from GitLab (may be ahead)
+                log.info(
+                    f"✓ GitHub is ahead by {ahead_by} commit(s) on branch '{default_branch}' — "
+                    f"GitLab origin is fully included"
+                )
                 return True, ""
             else:
                 msg = (
                     f"Out of sync — GitHub is missing {behind_by} commit(s) from GitLab "
-                    f"(GitHub HEAD={gh_sha[:8]}, GitLab HEAD={gl_sha[:8]}, status={status})"
+                    f"(GitHub HEAD={gh_sha[:8]}, GitLab HEAD={gl_sha[:8]}, "
+                    f"compare status={status!r}, branch={default_branch})"
                 )
-                log.warning(msg)
+                log.warning(f"✗ {msg}")
                 return False, msg
-        except GithubException as exc:
-            msg = f"compare API error: {exc.status} {exc.data}"
+
+        elif response.status_code == 404:
+            # gl_sha not found in github at all — definitely out of sync
+            msg = (
+                f"Out of sync — GitLab HEAD {gl_sha[:8]} not found in GitHub history "
+                f"(branch: {default_branch})"
+            )
+            log.warning(f"✗ {msg}")
+            return False, msg
+        else:
+            # Fallback: can't determine, treat as unknown
+            msg = (
+                f"Could not compare repositories "
+                f"(GitHub compare API returned {response.status_code})"
+            )
             log.warning(msg)
             return False, msg
 
@@ -415,42 +456,13 @@ class GitHubMigrator:
         )
         return [c.strip() for c in result.stdout.splitlines() if c.strip()]
 
-    @staticmethod
-    def _get_mirror_size_mb(mirror_path: str) -> float:
-        """Return the total size of the mirror directory in megabytes."""
-        total = sum(
-            os.path.getsize(os.path.join(root, f))
-            for root, _, files in os.walk(mirror_path)
-            for f in files
-        )
-        return total / (1024 * 1024)
-
-    def _push_full_mirror(
-        self,
-        mirror_path: str,
-        remote_url: str,
-        log: "RepoLogger",
-    ) -> None:
-        """Push all refs to GitHub using a single ``git push --mirror`` call."""
-        log.info("Pushing all refs (full mirror)...")
-        log.debug(f"$ git push --mirror {_redact_url(remote_url)}  (cwd={mirror_path})")
-        result = subprocess.run(
-            ["git", "push", "--mirror", remote_url],
-            capture_output=True, text=True, cwd=mirror_path,
-        )
-        log.debug(f"  stdout: {result.stdout.strip()}")
-        log.debug(f"  stderr: {result.stderr.strip()}")
-        if result.returncode != 0:
-            raise RuntimeError(f"git push --mirror failed: {result.stderr.strip()}")
-        log.info("✓ Full mirror push complete")
-
     def _push_branch_in_slices(
         self,
         mirror_path: str,
         remote_url: str,
         ref: str,
         log: "RepoLogger",
-        commits_per_slice: Optional[int] = None,
+        commits_per_slice: int = 500,
     ) -> None:
         """
         Push a single branch to GitHub in chronological commit slices.
@@ -513,7 +525,7 @@ class GitHubMigrator:
         mirror_path: str,
         remote_url: str,
         log: "RepoLogger",
-        commits_per_slice: Optional[int] = None,
+        commits_per_slice: int = 500,
     ) -> None:
         """
         Push all refs to GitHub, splitting large branches into commit slices
@@ -614,7 +626,7 @@ class GitHubMigrator:
             (True, result_dict)  if fully synced (repo should NOT be re-migrated)
             (False, None)        if empty or behind (migration should proceed)
         """
-        owner = self._get_owner()
+        owner = self.github_org if self.github_org else self.get_github_user()
 
         if self.is_repo_empty(repo_name):
             log.info(
@@ -670,34 +682,29 @@ class GitHubMigrator:
         Returns:
             None on success, or a ``{"status": "synced", ...}`` dict on a 422 race condition.
         Raises:
-            GithubException on unexpected API errors.
+            requests.HTTPError on unexpected API errors.
         """
-        owner = self._get_owner()
+        owner = self.github_org if self.github_org else self.get_github_user()
+        url = (
+            f"{self.github_api_base}/orgs/{self.github_org}/repos"
+            if self.github_org
+            else f"{self.github_api_base}/user/repos"
+        )
+        repo_data: Dict = {"name": repo_name, "private": private, "auto_init": False}
+        if description:
+            repo_data["description"] = description
+
         log.info(f"Creating repository {owner}/{repo_name}...")
-        try:
-            if self.github_org:
-                org = self._gh.get_organization(self.github_org)
-                org.create_repo(
-                    name=repo_name,
-                    private=private,
-                    auto_init=False,
-                    description=description or "",
-                )
-            else:
-                user = self._gh.get_user()
-                user.create_repo(
-                    name=repo_name,
-                    private=private,
-                    auto_init=False,
-                    description=description or "",
-                )
+        create_response = requests.post(url, headers=self.headers, json=repo_data)
+
+        if create_response.status_code == 201:
             log.info(f"Repository {owner}/{repo_name} created successfully")
             return None
-        except GithubException as exc:
-            if exc.status == 422:
-                log.warning(f"Repository {owner}/{repo_name} already exists (race condition)")
-                return {"status": "synced", "reason": "Repository appeared during migration"}
-            raise
+        if create_response.status_code == 422:
+            log.warning(f"Repository {owner}/{repo_name} already exists (race condition)")
+            return {"status": "synced", "reason": "Repository appeared during migration"}
+        create_response.raise_for_status()
+        return None
 
     def _clone_mirror_and_push(
         self,
@@ -707,22 +714,16 @@ class GitHubMigrator:
         repo_name: str,
         mirror_path: str,
         enable_lfs: bool,
-        commits_per_slice: Optional[int],
+        commits_per_slice: int,
         log: "RepoLogger",
     ) -> None:
         """
         Clone the source repo as a mirror and push all refs to GitHub.
 
-        By default (``commits_per_slice=None``) a single ``git push --mirror`` is used.
-        If the cloned mirror is larger than ``_LARGE_REPO_THRESHOLD_MB`` MB and slice
-        mode is not enabled, a warning with usage instructions is emitted.
-
-        Set ``commits_per_slice`` to a positive integer to split large branches into
-        commit slices (useful when the repo exceeds GitHub's 2 GB per-push limit).
-
+        Handles Git LFS fetching, large-blob conversion, and sliced pushes.
         Raises RuntimeError on git command failures.
         """
-        owner = self._get_owner()
+        owner = self.github_org if self.github_org else self.get_github_user()
 
         parsed = _urlparse(clone_url)
         if parsed.scheme not in ("https", "http") or not parsed.hostname:
@@ -740,17 +741,6 @@ class GitHubMigrator:
             )
             log.debug(f"git clone stdout: {clone_result.stdout.strip()}")
             log.debug(f"git clone stderr: {clone_result.stderr.strip()}")
-
-            # ── Large-repo warning ───────────────────────────────────────────
-            size_mb = self._get_mirror_size_mb(mirror_path)
-            log.debug(f"Mirror size: {size_mb:.1f} MB")
-            if commits_per_slice is None and size_mb > _LARGE_REPO_THRESHOLD_MB:
-                log.warning(
-                    f"Repository mirror is {size_mb:.0f} MB "
-                    f"(threshold: {_LARGE_REPO_THRESHOLD_MB} MB). "
-                    "If the push fails due to GitHub's 2 GB limit, re-run with "
-                    "--commits-per-slice 200 to push in smaller batches."
-                )
 
             if enable_lfs and _lfs_available() and self._repo_uses_lfs(mirror_path):
                 log.info("LFS objects detected — fetching all LFS objects from GitLab...")
@@ -777,19 +767,12 @@ class GitHubMigrator:
                 self._migrate_large_blobs_to_lfs(mirror_path, log)
 
             log.info(f"Pushing to {owner}/{repo_name} ...")
-            if commits_per_slice is None:
-                self._push_full_mirror(
-                    mirror_path=mirror_path,
-                    remote_url=github_push_url,
-                    log=log,
-                )
-            else:
-                self._push_in_batches(
-                    mirror_path=mirror_path,
-                    remote_url=github_push_url,
-                    log=log,
-                    commits_per_slice=commits_per_slice,
-                )
+            self._push_in_batches(
+                mirror_path=mirror_path,
+                remote_url=github_push_url,
+                log=log,
+                commits_per_slice=commits_per_slice,
+            )
 
             if enable_lfs and _lfs_available() and self._repo_uses_lfs(mirror_path):
                 log.info("Pushing LFS objects to GitHub...")
@@ -825,7 +808,7 @@ class GitHubMigrator:
         archive_synced: bool = False,
         log: Optional["RepoLogger"] = None,
         enable_lfs: bool = True,
-        commits_per_slice: Optional[int] = None,
+        commits_per_slice: int = 500,
     ) -> Dict:
         """
         Migrate a repository from GitLab to GitHub via git clone --mirror + push.
@@ -843,7 +826,7 @@ class GitHubMigrator:
               "synced"    – all branches already in sync (and archived if archive_synced)
         """
         log = log or RepoLogger(repo_name)
-        owner = self._get_owner()
+        owner = self.github_org if self.github_org else self.get_github_user()
 
         existing_repo = self.check_repo_exists(repo_name)
         if existing_repo:
@@ -908,7 +891,7 @@ class GitHubMigrator:
         gitlab_project_id: Optional[int] = None,
         archive_synced: bool = False,
         enable_lfs: bool = True,
-        commits_per_slice: Optional[int] = None,
+        commits_per_slice: int = 500,
     ) -> Tuple[bool, str]:
         """
         Migrate a single repository from GitLab to GitHub.
@@ -956,7 +939,7 @@ class GitHubMigrator:
         errors_reporter: Optional["ErrorsReporter"] = None,
         workers: int = 1,
         enable_lfs: bool = True,
-        commits_per_slice: Optional[int] = None,
+        commits_per_slice: int = 500,
     ) -> Dict[str, Dict]:
         """
         Migrate multiple repositories from GitLab to GitHub.

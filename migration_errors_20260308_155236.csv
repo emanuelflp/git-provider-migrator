@@ -1,0 +1,6 @@
+repo_name,source_url,status,reason
+mbweb-rest,https://gitlab.com/multsoft/web/mbweb-rest.git,error,"git operation failed: Cloning into bare repository '/var/folders/st/x53_kggj65v8z8kcxygm5h040000gq/T/gitlab_migrate_tujkszwj/mbweb-rest.git'...
+error: 58527 bytes of body are still expected
+fetch-pack: unexpected disconnect while reading sideband packet
+fatal: early EOF
+fatal: fetch-pack: invalid index-pack output"

@@ -1,0 +1,999 @@
+repo_name,source_url,status,reason
+mbweb-rest,https://gitlab.com/multsoft/web/mbweb-rest.git,error,"git push --mirror failed: remote: error: GH013: Repository rule violations found for refs/heads/master.        
+remote: Review all repository rules at https://github.com/multbovinos/mbweb-rest/rules?ref=refs%2Fheads%2Fmaster        
+remote: 
+remote: - refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope        
+remote: 
+remote: - Cannot force-push to this branch        
+remote: 
+remote: - Unable to validate Automatically request Copilot code review: Rule was unable to be completed in 50 seconds        
+remote: 
+remote: 
+remote: GitHub found 42 vulnerabilities on multbovinos/mbweb-rest's default branch (1 critical, 10 high, 22 moderate, 9 low). To find out more, visit:        
+remote:      https://github.com/multbovinos/mbweb-rest/security/dependabot        
+remote: 
+To https://github.com/multbovinos/mbweb-rest.git
+ - [deleted]             refs/github-services/chunked-upload/4f92947fa5f0642174c5e5acc8d2105d7c4f217c
+ - [deleted]             refs/github-services/chunked-upload/d6737d3dd05d2322b796f4c1b59ca2b5453808ce
+   62f783522..c2438bb06  27323 -> 27323
+ - [deleted]             dependabot/pip/django-4.2.29
+ - [deleted]             dependabot/pip/pillow-12.1.1
+ - [deleted]             dependabot/pip/pypdf-6.7.5
+ - [deleted]             fix/57570
+ - [deleted]             release/02-02-2026
+ - [deleted]             refs/merge-requests/3042/head
+ - [deleted]             refs/merge-requests/3042/merge
+ - [deleted]             refs/merge-requests/3043/head
+ - [deleted]             refs/merge-requests/3043/merge
+ - [deleted]             refs/merge-requests/3044/head
+ - [deleted]             refs/merge-requests/3044/merge
+ - [deleted]             refs/merge-requests/3045/head
+ - [deleted]             refs/merge-requests/3045/merge
+ - [deleted]             refs/merge-requests/3046/head
+ - [deleted]             refs/merge-requests/3046/merge
+ - [deleted]             refs/merge-requests/3047/head
+ - [deleted]             refs/merge-requests/3047/merge
+ - [deleted]             refs/merge-requests/3048/head
+ - [deleted]             refs/merge-requests/3048/merge
+ - [deleted]             refs/merge-requests/3049/head
+ - [deleted]             refs/merge-requests/3049/merge
+ - [deleted]             refs/merge-requests/3050/head
+ - [deleted]             refs/merge-requests/3050/merge
+ - [deleted]             refs/merge-requests/3051/head
+ - [deleted]             refs/merge-requests/3051/merge
+ - [deleted]             refs/merge-requests/3052/head
+ - [deleted]             refs/merge-requests/3052/merge
+ - [deleted]             refs/merge-requests/3053/head
+ - [deleted]             refs/merge-requests/3053/merge
+ - [deleted]             refs/merge-requests/3054/head
+ - [deleted]             refs/merge-requests/3054/merge
+ - [deleted]             refs/merge-requests/3055/head
+ - [deleted]             refs/merge-requests/3055/merge
+ - [deleted]             refs/merge-requests/3056/head
+ - [deleted]             refs/merge-requests/3056/merge
+ - [deleted]             refs/merge-requests/3057/head
+ - [deleted]             refs/merge-requests/3057/merge
+ - [deleted]             refs/merge-requests/3058/head
+ - [deleted]             refs/merge-requests/3058/merge
+ - [deleted]             refs/merge-requests/3059/head
+ - [deleted]             refs/merge-requests/3059/merge
+ - [deleted]             refs/merge-requests/3060/head
+ - [deleted]             refs/merge-requests/3060/merge
+ - [deleted]             refs/merge-requests/3061/head
+ - [deleted]             refs/merge-requests/3061/merge
+ - [deleted]             refs/merge-requests/3062/head
+ - [deleted]             refs/merge-requests/3062/merge
+ - [deleted]             refs/merge-requests/3063/head
+ - [deleted]             refs/merge-requests/3063/merge
+ - [deleted]             refs/merge-requests/3064/head
+ - [deleted]             refs/merge-requests/3064/merge
+ - [deleted]             refs/merge-requests/3065/head
+ - [deleted]             refs/merge-requests/3065/merge
+ - [deleted]             refs/merge-requests/3066/head
+ - [deleted]             refs/merge-requests/3066/merge
+ - [deleted]             refs/merge-requests/3067/head
+ - [deleted]             refs/merge-requests/3067/merge
+ - [deleted]             refs/merge-requests/3068/head
+ - [deleted]             refs/merge-requests/3068/merge
+ - [deleted]             refs/merge-requests/3069/head
+ - [deleted]             refs/merge-requests/3069/merge
+ - [deleted]             refs/merge-requests/3070/head
+ - [deleted]             refs/merge-requests/3070/merge
+ - [deleted]             refs/merge-requests/3071/head
+ - [deleted]             refs/merge-requests/3071/merge
+ - [deleted]             refs/merge-requests/3072/head
+ - [deleted]             refs/merge-requests/3072/merge
+ - [deleted]             refs/merge-requests/3073/head
+ - [deleted]             refs/merge-requests/3073/merge
+ - [deleted]             refs/merge-requests/3074/head
+ - [deleted]             refs/merge-requests/3074/merge
+ - [deleted]             refs/merge-requests/3075/head
+ - [deleted]             refs/merge-requests/3075/merge
+ - [deleted]             refs/merge-requests/3076/head
+ - [deleted]             refs/merge-requests/3076/merge
+ - [deleted]             refs/merge-requests/3077/head
+ - [deleted]             refs/merge-requests/3077/merge
+ - [deleted]             refs/merge-requests/3078/head
+ - [deleted]             refs/merge-requests/3078/merge
+ - [deleted]             refs/merge-requests/3079/head
+ - [deleted]             refs/merge-requests/3079/merge
+ - [deleted]             refs/merge-requests/3080/head
+ - [deleted]             refs/merge-requests/3080/merge
+ - [deleted]             refs/merge-requests/3081/head
+ - [deleted]             refs/merge-requests/3081/merge
+ - [deleted]             refs/merge-requests/3082/head
+ - [deleted]             refs/merge-requests/3082/merge
+ - [deleted]             refs/merge-requests/3083/head
+ - [deleted]             refs/merge-requests/3083/merge
+ - [deleted]             refs/merge-requests/3084/head
+ - [deleted]             refs/merge-requests/3084/merge
+ - [deleted]             refs/merge-requests/3085/head
+ - [deleted]             refs/merge-requests/3085/merge
+ - [deleted]             refs/merge-requests/3086/head
+ - [deleted]             refs/merge-requests/3086/merge
+ - [deleted]             refs/merge-requests/3087/head
+ - [deleted]             refs/merge-requests/3087/merge
+ - [deleted]             refs/merge-requests/3088/head
+ - [deleted]             refs/merge-requests/3088/merge
+ - [deleted]             refs/merge-requests/3089/head
+ - [deleted]             refs/merge-requests/3089/merge
+ - [deleted]             refs/merge-requests/3090/head
+ - [deleted]             refs/merge-requests/3090/merge
+ - [deleted]             refs/merge-requests/3091/head
+ - [deleted]             refs/merge-requests/3091/merge
+ - [deleted]             refs/merge-requests/3092/head
+ - [deleted]             refs/merge-requests/3092/merge
+ - [deleted]             refs/merge-requests/3093/head
+ - [deleted]             refs/merge-requests/3093/merge
+ - [deleted]             refs/merge-requests/3094/head
+ - [deleted]             refs/merge-requests/3094/merge
+ - [deleted]             refs/merge-requests/3095/head
+ - [deleted]             refs/merge-requests/3095/merge
+ - [deleted]             refs/merge-requests/3096/head
+ - [deleted]             refs/merge-requests/3096/merge
+ - [deleted]             refs/merge-requests/3097/head
+ - [deleted]             refs/merge-requests/3097/merge
+ - [deleted]             refs/merge-requests/3098/head
+ - [deleted]             refs/merge-requests/3098/merge
+ - [deleted]             refs/merge-requests/3099/head
+ - [deleted]             refs/merge-requests/3099/merge
+ - [deleted]             refs/merge-requests/3100/head
+ - [deleted]             refs/merge-requests/3100/merge
+ - [deleted]             refs/merge-requests/3101/head
+ - [deleted]             refs/merge-requests/3101/merge
+ - [deleted]             refs/merge-requests/3102/head
+ - [deleted]             refs/merge-requests/3102/merge
+ - [deleted]             refs/merge-requests/3103/head
+ - [deleted]             refs/merge-requests/3103/merge
+ - [deleted]             refs/merge-requests/3104/head
+ - [deleted]             refs/merge-requests/3104/merge
+ - [deleted]             refs/merge-requests/3105/head
+ - [deleted]             refs/merge-requests/3105/merge
+ - [deleted]             refs/merge-requests/3106/head
+ - [deleted]             refs/merge-requests/3106/merge
+ - [deleted]             refs/merge-requests/3107/head
+ - [deleted]             refs/merge-requests/3107/merge
+ - [deleted]             refs/merge-requests/3108/head
+ - [deleted]             refs/merge-requests/3108/merge
+ - [deleted]             refs/merge-requests/3109/head
+ - [deleted]             refs/merge-requests/3109/merge
+ - [deleted]             refs/merge-requests/3110/head
+ - [deleted]             refs/merge-requests/3110/merge
+ - [deleted]             refs/merge-requests/3111/head
+ - [deleted]             refs/merge-requests/3111/merge
+ - [deleted]             refs/merge-requests/3112/head
+ - [deleted]             refs/merge-requests/3112/merge
+ - [deleted]             refs/merge-requests/3113/head
+ - [deleted]             refs/merge-requests/3113/merge
+ - [deleted]             refs/merge-requests/3114/head
+ - [deleted]             refs/merge-requests/3114/merge
+ - [deleted]             refs/merge-requests/3115/head
+ - [deleted]             refs/merge-requests/3115/merge
+ - [deleted]             refs/merge-requests/3116/head
+ - [deleted]             refs/merge-requests/3116/merge
+ - [deleted]             refs/merge-requests/3117/head
+ - [deleted]             refs/merge-requests/3117/merge
+ - [deleted]             refs/merge-requests/3118/head
+ - [deleted]             refs/merge-requests/3118/merge
+ - [deleted]             refs/merge-requests/3119/head
+ - [deleted]             refs/merge-requests/3119/merge
+ - [deleted]             refs/merge-requests/3120/head
+ - [deleted]             refs/merge-requests/3120/merge
+ - [deleted]             refs/merge-requests/3121/head
+ - [deleted]             refs/merge-requests/3121/merge
+ - [deleted]             refs/merge-requests/3122/head
+ - [deleted]             refs/merge-requests/3122/merge
+ - [deleted]             refs/merge-requests/3123/head
+ - [deleted]             refs/merge-requests/3123/merge
+ - [deleted]             refs/merge-requests/3124/head
+ - [deleted]             refs/merge-requests/3124/merge
+ - [deleted]             refs/merge-requests/3125/head
+ - [deleted]             refs/merge-requests/3125/merge
+ - [deleted]             refs/merge-requests/3126/head
+ - [deleted]             refs/merge-requests/3126/merge
+ - [deleted]             refs/merge-requests/3127/head
+ - [deleted]             refs/merge-requests/3127/merge
+ - [deleted]             refs/merge-requests/3128/head
+ - [deleted]             refs/merge-requests/3128/merge
+ - [deleted]             refs/merge-requests/3129/head
+ - [deleted]             refs/merge-requests/3129/merge
+ - [deleted]             refs/merge-requests/3130/head
+ - [deleted]             refs/merge-requests/3130/merge
+ - [deleted]             refs/merge-requests/3131/head
+ - [deleted]             refs/merge-requests/3131/merge
+ - [deleted]             refs/merge-requests/3132/head
+ - [deleted]             refs/merge-requests/3132/merge
+ - [deleted]             refs/merge-requests/3133/head
+ - [deleted]             refs/merge-requests/3133/merge
+ - [deleted]             refs/merge-requests/3134/head
+ - [deleted]             refs/merge-requests/3134/merge
+ - [deleted]             refs/merge-requests/3135/head
+ - [deleted]             refs/merge-requests/3135/merge
+ - [deleted]             refs/merge-requests/3136/head
+ - [deleted]             refs/merge-requests/3136/merge
+ - [deleted]             refs/merge-requests/3137/head
+ - [deleted]             refs/merge-requests/3137/merge
+ - [deleted]             refs/merge-requests/3138/head
+ - [deleted]             refs/merge-requests/3138/merge
+ - [deleted]             refs/merge-requests/3139/head
+ - [deleted]             refs/merge-requests/3139/merge
+ - [deleted]             refs/merge-requests/3140/head
+ - [deleted]             refs/merge-requests/3140/merge
+ - [deleted]             refs/merge-requests/3141/head
+ - [deleted]             refs/merge-requests/3141/merge
+ - [deleted]             refs/merge-requests/3142/head
+ - [deleted]             refs/merge-requests/3142/merge
+ - [deleted]             refs/merge-requests/3143/head
+ - [deleted]             refs/merge-requests/3143/merge
+ - [deleted]             refs/merge-requests/3144/head
+ - [deleted]             refs/merge-requests/3144/merge
+ - [deleted]             refs/merge-requests/3145/head
+ - [deleted]             refs/merge-requests/3145/merge
+ - [deleted]             refs/merge-requests/3146/head
+ - [deleted]             refs/merge-requests/3146/merge
+ - [deleted]             refs/merge-requests/3147/head
+ - [deleted]             refs/merge-requests/3147/merge
+ - [deleted]             refs/merge-requests/3148/head
+ - [deleted]             refs/merge-requests/3148/merge
+ - [deleted]             refs/merge-requests/3149/head
+ - [deleted]             refs/merge-requests/3149/merge
+ - [deleted]             refs/merge-requests/3150/head
+ - [deleted]             refs/merge-requests/3150/merge
+ - [deleted]             refs/merge-requests/3151/head
+ - [deleted]             refs/merge-requests/3151/merge
+ - [deleted]             refs/merge-requests/3152/head
+ - [deleted]             refs/merge-requests/3152/merge
+ - [deleted]             refs/merge-requests/3153/head
+ - [deleted]             refs/merge-requests/3153/merge
+ - [deleted]             refs/merge-requests/3154/head
+ - [deleted]             refs/merge-requests/3154/merge
+ - [deleted]             refs/merge-requests/3155/head
+ - [deleted]             refs/merge-requests/3155/merge
+ - [deleted]             refs/merge-requests/3156/head
+ - [deleted]             refs/merge-requests/3156/merge
+ - [deleted]             refs/merge-requests/3157/head
+ - [deleted]             refs/merge-requests/3157/merge
+ - [deleted]             refs/merge-requests/3158/head
+ - [deleted]             refs/merge-requests/3158/merge
+ - [deleted]             refs/merge-requests/3159/head
+ - [deleted]             refs/merge-requests/3159/merge
+ - [deleted]             refs/merge-requests/3160/head
+ - [deleted]             refs/merge-requests/3160/merge
+ - [deleted]             refs/merge-requests/3161/head
+ - [deleted]             refs/merge-requests/3161/merge
+ - [deleted]             refs/merge-requests/3162/head
+ - [deleted]             refs/merge-requests/3162/merge
+ - [deleted]             refs/merge-requests/3163/head
+ - [deleted]             refs/merge-requests/3163/merge
+ - [deleted]             refs/merge-requests/3164/head
+ - [deleted]             refs/merge-requests/3164/merge
+ - [deleted]             refs/merge-requests/3165/head
+ - [deleted]             refs/merge-requests/3165/merge
+ - [deleted]             refs/merge-requests/3166/head
+ - [deleted]             refs/merge-requests/3166/merge
+ - [deleted]             refs/merge-requests/3167/head
+ - [deleted]             refs/merge-requests/3167/merge
+ - [deleted]             refs/merge-requests/3168/head
+ - [deleted]             refs/merge-requests/3168/merge
+ - [deleted]             refs/merge-requests/3169/head
+ - [deleted]             refs/merge-requests/3169/merge
+ - [deleted]             refs/merge-requests/3170/head
+ - [deleted]             refs/merge-requests/3170/merge
+ - [deleted]             refs/merge-requests/3171/head
+ - [deleted]             refs/merge-requests/3171/merge
+ - [deleted]             refs/merge-requests/3172/head
+ - [deleted]             refs/merge-requests/3172/merge
+ - [deleted]             refs/merge-requests/3173/head
+ - [deleted]             refs/merge-requests/3173/merge
+ - [deleted]             refs/merge-requests/3174/head
+ - [deleted]             refs/merge-requests/3174/merge
+ - [deleted]             refs/merge-requests/3175/head
+ - [deleted]             refs/merge-requests/3175/merge
+ - [deleted]             refs/merge-requests/3176/head
+ - [deleted]             refs/merge-requests/3176/merge
+ - [deleted]             refs/merge-requests/3177/head
+ - [deleted]             refs/merge-requests/3177/merge
+ - [deleted]             refs/merge-requests/3178/head
+ - [deleted]             refs/merge-requests/3178/merge
+ - [deleted]             refs/merge-requests/3179/head
+ - [deleted]             refs/merge-requests/3179/merge
+ - [deleted]             refs/merge-requests/3180/head
+ - [deleted]             refs/merge-requests/3180/merge
+ - [deleted]             refs/merge-requests/3181/head
+ - [deleted]             refs/merge-requests/3181/merge
+ - [deleted]             refs/merge-requests/3182/head
+ - [deleted]             refs/merge-requests/3182/merge
+ - [deleted]             refs/merge-requests/3183/head
+ - [deleted]             refs/merge-requests/3183/merge
+ - [deleted]             refs/merge-requests/3184/head
+ - [deleted]             refs/merge-requests/3184/merge
+ - [deleted]             refs/merge-requests/3185/head
+ - [deleted]             refs/merge-requests/3185/merge
+ - [deleted]             refs/merge-requests/3186/head
+ - [deleted]             refs/merge-requests/3186/merge
+ - [deleted]             refs/merge-requests/3187/head
+ - [deleted]             refs/merge-requests/3187/merge
+ - [deleted]             refs/merge-requests/3188/head
+ - [deleted]             refs/merge-requests/3188/merge
+ - [deleted]             refs/merge-requests/3189/head
+ - [deleted]             refs/merge-requests/3189/merge
+ - [deleted]             refs/merge-requests/3190/head
+ - [deleted]             refs/merge-requests/3190/merge
+ - [deleted]             refs/merge-requests/3191/head
+ - [deleted]             refs/merge-requests/3191/merge
+ - [deleted]             refs/merge-requests/3192/head
+ - [deleted]             refs/merge-requests/3192/merge
+ - [deleted]             refs/merge-requests/3193/head
+ - [deleted]             refs/merge-requests/3193/merge
+ - [deleted]             refs/merge-requests/3194/head
+ - [deleted]             refs/merge-requests/3194/merge
+ - [deleted]             refs/merge-requests/3195/head
+ - [deleted]             refs/merge-requests/3195/merge
+ - [deleted]             refs/merge-requests/3196/head
+ - [deleted]             refs/merge-requests/3196/merge
+ - [deleted]             refs/merge-requests/3197/head
+ - [deleted]             refs/merge-requests/3197/merge
+ - [deleted]             refs/merge-requests/3198/head
+ - [deleted]             refs/merge-requests/3198/merge
+ - [deleted]             refs/merge-requests/3199/head
+ - [deleted]             refs/merge-requests/3199/merge
+ - [deleted]             refs/merge-requests/3200/head
+ - [deleted]             refs/merge-requests/3200/merge
+ - [deleted]             refs/merge-requests/3201/head
+ - [deleted]             refs/merge-requests/3201/merge
+ - [deleted]             refs/merge-requests/3202/head
+ - [deleted]             refs/merge-requests/3202/merge
+ - [deleted]             refs/merge-requests/3203/head
+ - [deleted]             refs/merge-requests/3203/merge
+ - [deleted]             refs/merge-requests/3204/head
+ - [deleted]             refs/merge-requests/3204/merge
+ - [deleted]             refs/merge-requests/3205/head
+ - [deleted]             refs/merge-requests/3205/merge
+ - [deleted]             refs/merge-requests/3206/head
+ - [deleted]             refs/merge-requests/3206/merge
+ - [deleted]             refs/merge-requests/3207/head
+ - [deleted]             refs/merge-requests/3207/merge
+ - [deleted]             refs/merge-requests/3208/head
+ - [deleted]             refs/merge-requests/3208/merge
+ - [deleted]             refs/merge-requests/3209/head
+ - [deleted]             refs/merge-requests/3209/merge
+ - [deleted]             refs/merge-requests/3210/head
+ - [deleted]             refs/merge-requests/3210/merge
+ - [deleted]             refs/merge-requests/3211/head
+ - [deleted]             refs/merge-requests/3211/merge
+ - [deleted]             refs/merge-requests/3212/head
+ - [deleted]             refs/merge-requests/3212/merge
+ - [deleted]             refs/merge-requests/3213/head
+ - [deleted]             refs/merge-requests/3213/merge
+ - [deleted]             refs/merge-requests/3214/head
+ - [deleted]             refs/merge-requests/3214/merge
+ - [deleted]             refs/merge-requests/3215/head
+ - [deleted]             refs/merge-requests/3215/merge
+ - [deleted]             refs/merge-requests/3216/head
+ - [deleted]             refs/merge-requests/3216/merge
+ - [deleted]             refs/merge-requests/3217/head
+ - [deleted]             refs/merge-requests/3217/merge
+ - [deleted]             refs/merge-requests/3218/head
+ - [deleted]             refs/merge-requests/3218/merge
+ - [deleted]             refs/merge-requests/3219/head
+ - [deleted]             refs/merge-requests/3219/merge
+ - [deleted]             refs/merge-requests/3220/head
+ - [deleted]             refs/merge-requests/3220/merge
+ - [deleted]             refs/merge-requests/3221/head
+ - [deleted]             refs/merge-requests/3221/merge
+ - [deleted]             refs/merge-requests/3222/head
+ - [deleted]             refs/merge-requests/3222/merge
+ - [deleted]             refs/merge-requests/3223/head
+ - [deleted]             refs/merge-requests/3223/merge
+ - [deleted]             refs/merge-requests/3224/head
+ - [deleted]             refs/merge-requests/3224/merge
+ - [deleted]             refs/merge-requests/3225/head
+ - [deleted]             refs/merge-requests/3225/merge
+ - [deleted]             refs/merge-requests/3226/head
+ - [deleted]             refs/merge-requests/3226/merge
+ - [deleted]             refs/merge-requests/3227/head
+ - [deleted]             refs/merge-requests/3227/merge
+ - [deleted]             refs/merge-requests/3228/head
+ - [deleted]             refs/merge-requests/3228/merge
+ - [deleted]             refs/merge-requests/3229/head
+ - [deleted]             refs/merge-requests/3229/merge
+ - [deleted]             refs/merge-requests/3230/head
+ - [deleted]             refs/merge-requests/3230/merge
+ - [deleted]             refs/merge-requests/3231/head
+ - [deleted]             refs/merge-requests/3231/merge
+ - [deleted]             refs/merge-requests/3232/head
+ - [deleted]             refs/merge-requests/3232/merge
+ - [deleted]             refs/merge-requests/3233/head
+ - [deleted]             refs/merge-requests/3233/merge
+ - [deleted]             refs/merge-requests/3234/head
+ - [deleted]             refs/merge-requests/3234/merge
+ - [deleted]             refs/merge-requests/3235/head
+ - [deleted]             refs/merge-requests/3235/merge
+ - [deleted]             refs/merge-requests/3236/head
+ - [deleted]             refs/merge-requests/3236/merge
+ - [deleted]             refs/merge-requests/3237/head
+ - [deleted]             refs/merge-requests/3237/merge
+ - [deleted]             refs/merge-requests/3238/head
+ - [deleted]             refs/merge-requests/3238/merge
+ - [deleted]             refs/merge-requests/3239/head
+ - [deleted]             refs/merge-requests/3239/merge
+ - [deleted]             refs/merge-requests/3240/head
+ - [deleted]             refs/merge-requests/3240/merge
+ - [deleted]             refs/merge-requests/3241/head
+ - [deleted]             refs/merge-requests/3241/merge
+ - [deleted]             refs/merge-requests/3242/head
+ - [deleted]             refs/merge-requests/3242/merge
+ - [deleted]             refs/merge-requests/3243/head
+ - [deleted]             refs/merge-requests/3243/merge
+ - [deleted]             refs/merge-requests/3244/head
+ - [deleted]             refs/merge-requests/3244/merge
+ - [deleted]             refs/merge-requests/3245/head
+ - [deleted]             refs/merge-requests/3245/merge
+ - [deleted]             refs/merge-requests/3246/head
+ - [deleted]             refs/merge-requests/3246/merge
+ - [deleted]             refs/merge-requests/3247/head
+ - [deleted]             refs/merge-requests/3247/merge
+ - [deleted]             refs/merge-requests/3248/head
+ - [deleted]             refs/merge-requests/3248/merge
+ - [deleted]             refs/merge-requests/3249/head
+ - [deleted]             refs/merge-requests/3249/merge
+ - [deleted]             refs/merge-requests/3250/head
+ - [deleted]             refs/merge-requests/3250/merge
+ - [deleted]             refs/merge-requests/3251/head
+ - [deleted]             refs/merge-requests/3251/merge
+ - [deleted]             refs/merge-requests/3252/head
+ - [deleted]             refs/merge-requests/3252/merge
+ - [deleted]             refs/merge-requests/3253/head
+ - [deleted]             refs/merge-requests/3253/merge
+ - [deleted]             refs/merge-requests/3254/head
+ - [deleted]             refs/merge-requests/3254/merge
+ - [deleted]             refs/merge-requests/3255/head
+ - [deleted]             refs/merge-requests/3255/merge
+ - [deleted]             refs/merge-requests/3256/head
+ - [deleted]             refs/merge-requests/3256/merge
+ - [deleted]             refs/merge-requests/3257/head
+ - [deleted]             refs/merge-requests/3257/merge
+ - [deleted]             refs/merge-requests/3258/head
+ - [deleted]             refs/merge-requests/3258/merge
+ - [deleted]             refs/merge-requests/3259/head
+ - [deleted]             refs/merge-requests/3259/merge
+ - [deleted]             refs/merge-requests/3260/head
+ - [deleted]             refs/merge-requests/3260/merge
+ - [deleted]             refs/merge-requests/3261/head
+ - [deleted]             refs/merge-requests/3261/merge
+ - [deleted]             refs/merge-requests/3262/head
+ - [deleted]             refs/merge-requests/3262/merge
+ - [deleted]             refs/merge-requests/3263/head
+ - [deleted]             refs/merge-requests/3263/merge
+ - [deleted]             refs/merge-requests/3264/head
+ - [deleted]             refs/merge-requests/3264/merge
+ - [deleted]             refs/merge-requests/3265/head
+ - [deleted]             refs/merge-requests/3265/merge
+ - [deleted]             refs/merge-requests/3266/head
+ - [deleted]             refs/merge-requests/3266/merge
+ - [deleted]             refs/merge-requests/3267/head
+ - [deleted]             refs/merge-requests/3267/merge
+ - [deleted]             refs/merge-requests/3268/head
+ - [deleted]             refs/merge-requests/3268/merge
+ - [deleted]             refs/merge-requests/3269/head
+ - [deleted]             refs/merge-requests/3269/merge
+ - [deleted]             refs/merge-requests/3270/head
+ - [deleted]             refs/merge-requests/3270/merge
+ - [deleted]             refs/merge-requests/3271/head
+ - [deleted]             refs/merge-requests/3271/merge
+ - [deleted]             refs/merge-requests/3272/head
+ - [deleted]             refs/merge-requests/3272/merge
+ - [deleted]             refs/merge-requests/3273/head
+ - [deleted]             refs/merge-requests/3273/merge
+ - [deleted]             refs/merge-requests/3274/head
+ - [deleted]             refs/merge-requests/3274/merge
+ - [deleted]             refs/merge-requests/3275/head
+ - [deleted]             refs/merge-requests/3275/merge
+ - [deleted]             refs/merge-requests/3276/head
+ - [deleted]             refs/merge-requests/3276/merge
+ - [deleted]             refs/merge-requests/3277/head
+ - [deleted]             refs/merge-requests/3277/merge
+ - [deleted]             refs/merge-requests/3278/head
+ - [deleted]             refs/merge-requests/3278/merge
+ - [deleted]             refs/merge-requests/3279/head
+ - [deleted]             refs/merge-requests/3279/merge
+ - [deleted]             refs/merge-requests/3280/head
+ - [deleted]             refs/merge-requests/3280/merge
+ - [deleted]             refs/merge-requests/3281/head
+ - [deleted]             refs/merge-requests/3281/merge
+ - [deleted]             refs/merge-requests/3282/head
+ - [deleted]             refs/merge-requests/3282/merge
+ - [deleted]             refs/merge-requests/3283/head
+ - [deleted]             refs/merge-requests/3283/merge
+ - [deleted]             refs/merge-requests/3284/head
+ - [deleted]             refs/merge-requests/3284/merge
+ - [deleted]             refs/merge-requests/3285/head
+ - [deleted]             refs/merge-requests/3285/merge
+ - [deleted]             refs/merge-requests/3286/head
+ - [deleted]             refs/merge-requests/3286/merge
+ - [deleted]             refs/merge-requests/3287/head
+ - [deleted]             refs/merge-requests/3287/merge
+ - [deleted]             refs/merge-requests/3288/head
+ - [deleted]             refs/merge-requests/3288/merge
+ - [deleted]             refs/merge-requests/3289/head
+ - [deleted]             refs/merge-requests/3289/merge
+ - [deleted]             refs/merge-requests/3290/head
+ - [deleted]             refs/merge-requests/3290/merge
+ - [deleted]             refs/merge-requests/3291/head
+ - [deleted]             refs/merge-requests/3291/merge
+ - [deleted]             refs/merge-requests/3292/head
+ - [deleted]             refs/merge-requests/3292/merge
+ - [deleted]             refs/merge-requests/3293/head
+ - [deleted]             refs/merge-requests/3293/merge
+ - [deleted]             refs/merge-requests/3294/head
+ - [deleted]             refs/merge-requests/3294/merge
+ - [deleted]             refs/merge-requests/3295/head
+ - [deleted]             refs/merge-requests/3295/merge
+ - [deleted]             refs/merge-requests/3296/head
+ - [deleted]             refs/merge-requests/3296/merge
+ - [deleted]             refs/merge-requests/3297/head
+ - [deleted]             refs/merge-requests/3297/merge
+ - [deleted]             refs/merge-requests/3298/head
+ - [deleted]             refs/merge-requests/3298/merge
+ - [deleted]             refs/merge-requests/3299/head
+ - [deleted]             refs/merge-requests/3299/merge
+ - [deleted]             refs/merge-requests/3300/head
+ - [deleted]             refs/merge-requests/3300/merge
+ - [deleted]             refs/merge-requests/3301/head
+ - [deleted]             refs/merge-requests/3301/merge
+ - [deleted]             refs/merge-requests/3302/head
+ - [deleted]             refs/merge-requests/3302/merge
+ - [deleted]             refs/merge-requests/3303/head
+ - [deleted]             refs/merge-requests/3303/merge
+ - [deleted]             refs/merge-requests/3304/head
+ - [deleted]             refs/merge-requests/3304/merge
+ - [deleted]             refs/merge-requests/3305/head
+ - [deleted]             refs/merge-requests/3305/merge
+ - [deleted]             refs/merge-requests/3306/head
+ - [deleted]             refs/merge-requests/3306/merge
+ - [deleted]             refs/merge-requests/3307/head
+ - [deleted]             refs/merge-requests/3307/merge
+ - [deleted]             refs/merge-requests/3308/head
+ - [deleted]             refs/merge-requests/3308/merge
+ - [deleted]             refs/merge-requests/3309/head
+ - [deleted]             refs/merge-requests/3309/merge
+ - [deleted]             refs/merge-requests/3310/head
+ - [deleted]             refs/merge-requests/3310/merge
+ - [deleted]             refs/merge-requests/3311/head
+ - [deleted]             refs/merge-requests/3311/merge
+ - [deleted]             refs/merge-requests/3312/head
+ - [deleted]             refs/merge-requests/3312/merge
+ - [deleted]             refs/merge-requests/3313/head
+ - [deleted]             refs/merge-requests/3313/merge
+ - [deleted]             refs/merge-requests/3314/head
+ - [deleted]             refs/merge-requests/3314/merge
+ - [deleted]             refs/merge-requests/3315/head
+ - [deleted]             refs/merge-requests/3315/merge
+ - [deleted]             refs/merge-requests/3316/head
+ - [deleted]             refs/merge-requests/3316/merge
+ - [deleted]             refs/merge-requests/3317/head
+ - [deleted]             refs/merge-requests/3317/merge
+ - [deleted]             refs/merge-requests/3318/head
+ - [deleted]             refs/merge-requests/3318/merge
+ - [deleted]             refs/merge-requests/3319/head
+ - [deleted]             refs/merge-requests/3319/merge
+ - [deleted]             refs/merge-requests/3320/head
+ - [deleted]             refs/merge-requests/3320/merge
+ - [deleted]             refs/merge-requests/3321/head
+ - [deleted]             refs/merge-requests/3321/merge
+ - [deleted]             refs/merge-requests/3322/head
+ - [deleted]             refs/merge-requests/3322/merge
+ - [deleted]             refs/merge-requests/3323/head
+ - [deleted]             refs/merge-requests/3323/merge
+ - [deleted]             refs/merge-requests/3324/head
+ - [deleted]             refs/merge-requests/3324/merge
+ - [deleted]             refs/merge-requests/3325/head
+ - [deleted]             refs/merge-requests/3325/merge
+ - [deleted]             refs/merge-requests/3326/head
+ - [deleted]             refs/merge-requests/3326/merge
+ - [deleted]             refs/merge-requests/3327/head
+ - [deleted]             refs/merge-requests/3327/merge
+ - [deleted]             refs/merge-requests/3328/head
+ - [deleted]             refs/merge-requests/3328/merge
+ - [deleted]             refs/merge-requests/3329/head
+ - [deleted]             refs/merge-requests/3329/merge
+ - [deleted]             refs/merge-requests/3330/head
+ - [deleted]             refs/merge-requests/3330/merge
+ - [deleted]             refs/merge-requests/3331/head
+ - [deleted]             refs/merge-requests/3331/merge
+ - [deleted]             refs/merge-requests/3332/head
+ - [deleted]             refs/merge-requests/3332/merge
+ - [deleted]             refs/merge-requests/3333/head
+ - [deleted]             refs/merge-requests/3333/merge
+ - [deleted]             refs/merge-requests/3334/head
+ - [deleted]             refs/merge-requests/3334/merge
+ - [deleted]             refs/merge-requests/3335/head
+ - [deleted]             refs/merge-requests/3335/merge
+ - [deleted]             refs/merge-requests/3336/head
+ - [deleted]             refs/merge-requests/3336/merge
+ - [deleted]             refs/merge-requests/3337/head
+ - [deleted]             refs/merge-requests/3337/merge
+ - [deleted]             refs/merge-requests/3338/head
+ - [deleted]             refs/merge-requests/3338/merge
+ - [deleted]             refs/merge-requests/3339/head
+ - [deleted]             refs/merge-requests/3339/merge
+ - [deleted]             refs/merge-requests/3340/head
+ - [deleted]             refs/merge-requests/3340/merge
+ - [deleted]             refs/merge-requests/3341/head
+ - [deleted]             refs/merge-requests/3341/merge
+ - [deleted]             refs/merge-requests/3342/head
+ - [deleted]             refs/merge-requests/3342/merge
+ - [deleted]             refs/merge-requests/3343/head
+ - [deleted]             refs/merge-requests/3343/merge
+ - [deleted]             refs/merge-requests/3344/head
+ - [deleted]             refs/merge-requests/3344/merge
+ - [deleted]             refs/merge-requests/3345/head
+ - [deleted]             refs/merge-requests/3345/merge
+ - [deleted]             refs/merge-requests/3346/head
+ - [deleted]             refs/merge-requests/3346/merge
+ - [deleted]             refs/merge-requests/3347/head
+ - [deleted]             refs/merge-requests/3347/merge
+ - [deleted]             refs/merge-requests/3348/head
+ - [deleted]             refs/merge-requests/3348/merge
+ - [deleted]             refs/merge-requests/3349/head
+ - [deleted]             refs/merge-requests/3349/merge
+ - [deleted]             refs/merge-requests/3350/head
+ - [deleted]             refs/merge-requests/3350/merge
+ - [deleted]             refs/merge-requests/3351/head
+ - [deleted]             refs/merge-requests/3351/merge
+ - [deleted]             refs/merge-requests/3352/head
+ - [deleted]             refs/merge-requests/3352/merge
+ - [deleted]             refs/merge-requests/3353/head
+ - [deleted]             refs/merge-requests/3353/merge
+ - [deleted]             refs/merge-requests/3354/head
+ - [deleted]             refs/merge-requests/3354/merge
+ - [deleted]             refs/merge-requests/3355/head
+ - [deleted]             refs/merge-requests/3355/merge
+ - [deleted]             refs/merge-requests/3356/head
+ - [deleted]             refs/merge-requests/3356/merge
+ - [deleted]             refs/merge-requests/3357/head
+ - [deleted]             refs/merge-requests/3357/merge
+ - [deleted]             refs/merge-requests/3358/head
+ - [deleted]             refs/merge-requests/3358/merge
+ - [deleted]             refs/merge-requests/3359/head
+ - [deleted]             refs/merge-requests/3359/merge
+ - [deleted]             refs/merge-requests/3360/head
+ - [deleted]             refs/merge-requests/3360/merge
+ - [deleted]             refs/merge-requests/3361/head
+ - [deleted]             refs/merge-requests/3361/merge
+ - [deleted]             refs/merge-requests/3362/head
+ - [deleted]             refs/merge-requests/3362/merge
+ - [deleted]             refs/merge-requests/3363/head
+ - [deleted]             refs/merge-requests/3363/merge
+ - [deleted]             refs/merge-requests/3364/head
+ - [deleted]             refs/merge-requests/3364/merge
+ - [deleted]             refs/merge-requests/3365/head
+ - [deleted]             refs/merge-requests/3365/merge
+ - [deleted]             refs/merge-requests/3366/head
+ - [deleted]             refs/merge-requests/3366/merge
+ - [deleted]             refs/merge-requests/3367/head
+ - [deleted]             refs/merge-requests/3367/merge
+ - [deleted]             refs/merge-requests/3368/head
+ - [deleted]             refs/merge-requests/3368/merge
+ - [deleted]             refs/merge-requests/3369/head
+ - [deleted]             refs/merge-requests/3369/merge
+ - [deleted]             refs/merge-requests/3370/head
+ - [deleted]             refs/merge-requests/3370/merge
+ - [deleted]             refs/merge-requests/3371/head
+ - [deleted]             refs/merge-requests/3371/merge
+ - [deleted]             refs/merge-requests/3372/head
+ - [deleted]             refs/merge-requests/3372/merge
+ - [deleted]             refs/merge-requests/3373/head
+ - [deleted]             refs/merge-requests/3373/merge
+ - [deleted]             refs/merge-requests/3374/head
+ - [deleted]             refs/merge-requests/3374/merge
+ - [deleted]             refs/merge-requests/3375/head
+ - [deleted]             refs/merge-requests/3375/merge
+ - [deleted]             refs/merge-requests/3376/head
+ - [deleted]             refs/merge-requests/3376/merge
+ - [deleted]             refs/merge-requests/3377/head
+ - [deleted]             refs/merge-requests/3377/merge
+ - [deleted]             refs/merge-requests/3378/head
+ - [deleted]             refs/merge-requests/3378/merge
+ - [deleted]             refs/merge-requests/3379/head
+ - [deleted]             refs/merge-requests/3379/merge
+ - [deleted]             refs/merge-requests/3380/head
+ - [deleted]             refs/merge-requests/3380/merge
+ - [deleted]             refs/merge-requests/3381/head
+ - [deleted]             refs/merge-requests/3381/merge
+ - [deleted]             refs/merge-requests/3383/head
+ - [deleted]             refs/merge-requests/3383/merge
+ - [deleted]             refs/merge-requests/4441/head
+ - [deleted]             refs/merge-requests/4441/merge
+ - [deleted]             refs/merge-requests/4442/head
+ - [deleted]             refs/merge-requests/4442/merge
+ - [deleted]             refs/merge-requests/4443/head
+ - [deleted]             refs/merge-requests/4443/merge
+ - [deleted]             refs/merge-requests/4444/head
+ - [deleted]             refs/merge-requests/4444/merge
+ - [deleted]             refs/merge-requests/4445/head
+ - [deleted]             refs/merge-requests/4445/merge
+ - [deleted]             refs/merge-requests/4446/head
+ - [deleted]             refs/merge-requests/4446/merge
+ - [deleted]             refs/merge-requests/4447/head
+ - [deleted]             refs/merge-requests/4447/merge
+ - [deleted]             refs/merge-requests/4448/head
+ - [deleted]             refs/merge-requests/4448/merge
+ - [deleted]             refs/merge-requests/4449/head
+ - [deleted]             refs/merge-requests/4449/merge
+ - [deleted]             refs/merge-requests/4450/head
+ - [deleted]             refs/merge-requests/4450/merge
+ - [deleted]             refs/merge-requests/4451/head
+ - [deleted]             refs/merge-requests/4451/merge
+ - [deleted]             refs/merge-requests/4452/head
+ - [deleted]             refs/merge-requests/4452/merge
+ - [deleted]             refs/merge-requests/4453/head
+ - [deleted]             refs/merge-requests/4453/merge
+ - [deleted]             refs/merge-requests/4454/head
+ - [deleted]             refs/merge-requests/4454/merge
+ - [deleted]             refs/merge-requests/4455/head
+ - [deleted]             refs/merge-requests/4455/merge
+ - [deleted]             refs/merge-requests/4456/head
+ - [deleted]             refs/merge-requests/4456/merge
+ - [deleted]             refs/merge-requests/4457/head
+ - [deleted]             refs/merge-requests/4457/merge
+ - [deleted]             refs/merge-requests/4458/head
+ - [deleted]             refs/merge-requests/4458/merge
+ - [deleted]             refs/merge-requests/4459/head
+ - [deleted]             refs/merge-requests/4459/merge
+ - [deleted]             refs/merge-requests/4460/head
+ - [deleted]             refs/merge-requests/4460/merge
+ - [deleted]             refs/merge-requests/4461/head
+ - [deleted]             refs/merge-requests/4461/merge
+ - [deleted]             refs/merge-requests/4462/head
+ - [deleted]             refs/merge-requests/4462/merge
+ - [deleted]             refs/merge-requests/4463/head
+ - [deleted]             refs/merge-requests/4463/merge
+ - [deleted]             refs/merge-requests/4464/head
+ - [deleted]             refs/merge-requests/4464/merge
+ - [deleted]             refs/merge-requests/4465/head
+ - [deleted]             refs/merge-requests/4465/merge
+ - [deleted]             refs/merge-requests/4466/head
+ - [deleted]             refs/merge-requests/4466/merge
+ - [deleted]             refs/merge-requests/4467/head
+ - [deleted]             refs/merge-requests/4467/merge
+ - [deleted]             refs/merge-requests/4468/head
+ - [deleted]             refs/merge-requests/4468/merge
+ * [new reference]       refs/environments/homol-core/deployments/2104 -> refs/environments/homol-core/deployments/2104
+ ! [remote rejected]     develop -> develop (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     feat/issue-52071-upgrade-versao -> feat/issue-52071-upgrade-versao (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     master -> master (push declined due to repository rule violations)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2116 -> refs/environments/homol-core/deployments/2116 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2124 -> refs/environments/homol-core/deployments/2124 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2127 -> refs/environments/homol-core/deployments/2127 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2131 -> refs/environments/homol-core/deployments/2131 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2136 -> refs/environments/homol-core/deployments/2136 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2137 -> refs/environments/homol-core/deployments/2137 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2142 -> refs/environments/homol-core/deployments/2142 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2147 -> refs/environments/homol-core/deployments/2147 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2148 -> refs/environments/homol-core/deployments/2148 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2149 -> refs/environments/homol-core/deployments/2149 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2150 -> refs/environments/homol-core/deployments/2150 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2151 -> refs/environments/homol-core/deployments/2151 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2152 -> refs/environments/homol-core/deployments/2152 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2157 -> refs/environments/homol-core/deployments/2157 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2158 -> refs/environments/homol-core/deployments/2158 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2159 -> refs/environments/homol-core/deployments/2159 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2160 -> refs/environments/homol-core/deployments/2160 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2161 -> refs/environments/homol-core/deployments/2161 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2162 -> refs/environments/homol-core/deployments/2162 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2163 -> refs/environments/homol-core/deployments/2163 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2164 -> refs/environments/homol-core/deployments/2164 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2165 -> refs/environments/homol-core/deployments/2165 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2166 -> refs/environments/homol-core/deployments/2166 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2167 -> refs/environments/homol-core/deployments/2167 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2168 -> refs/environments/homol-core/deployments/2168 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2169 -> refs/environments/homol-core/deployments/2169 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2170 -> refs/environments/homol-core/deployments/2170 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2171 -> refs/environments/homol-core/deployments/2171 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2176 -> refs/environments/homol-core/deployments/2176 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2177 -> refs/environments/homol-core/deployments/2177 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2178 -> refs/environments/homol-core/deployments/2178 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2183 -> refs/environments/homol-core/deployments/2183 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2185 -> refs/environments/homol-core/deployments/2185 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2191 -> refs/environments/homol-core/deployments/2191 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2192 -> refs/environments/homol-core/deployments/2192 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2193 -> refs/environments/homol-core/deployments/2193 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2194 -> refs/environments/homol-core/deployments/2194 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2200 -> refs/environments/homol-core/deployments/2200 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2201 -> refs/environments/homol-core/deployments/2201 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2207 -> refs/environments/homol-core/deployments/2207 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2208 -> refs/environments/homol-core/deployments/2208 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2209 -> refs/environments/homol-core/deployments/2209 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2215 -> refs/environments/homol-core/deployments/2215 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2216 -> refs/environments/homol-core/deployments/2216 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2217 -> refs/environments/homol-core/deployments/2217 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2218 -> refs/environments/homol-core/deployments/2218 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2219 -> refs/environments/homol-core/deployments/2219 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2220 -> refs/environments/homol-core/deployments/2220 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2221 -> refs/environments/homol-core/deployments/2221 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2222 -> refs/environments/homol-core/deployments/2222 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2228 -> refs/environments/homol-core/deployments/2228 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2229 -> refs/environments/homol-core/deployments/2229 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2230 -> refs/environments/homol-core/deployments/2230 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2231 -> refs/environments/homol-core/deployments/2231 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2232 -> refs/environments/homol-core/deployments/2232 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2233 -> refs/environments/homol-core/deployments/2233 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2234 -> refs/environments/homol-core/deployments/2234 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2235 -> refs/environments/homol-core/deployments/2235 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2237 -> refs/environments/homol-core/deployments/2237 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2238 -> refs/environments/homol-core/deployments/2238 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2239 -> refs/environments/homol-core/deployments/2239 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2240 -> refs/environments/homol-core/deployments/2240 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2241 -> refs/environments/homol-core/deployments/2241 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2243 -> refs/environments/homol-core/deployments/2243 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol-core/deployments/2244 -> refs/environments/homol-core/deployments/2244 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol/deployments/2109 -> refs/environments/homol/deployments/2109 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol/deployments/2111 -> refs/environments/homol/deployments/2111 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol/deployments/2113 -> refs/environments/homol/deployments/2113 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol/deployments/2115 -> refs/environments/homol/deployments/2115 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/homol/deployments/2117 -> refs/environments/homol/deployments/2117 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-core/deployments/2128 -> refs/environments/prod-core/deployments/2128 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-core/deployments/2134 -> refs/environments/prod-core/deployments/2134 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-core/deployments/2141 -> refs/environments/prod-core/deployments/2141 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-core/deployments/2145 -> refs/environments/prod-core/deployments/2145 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-core/deployments/2156 -> refs/environments/prod-core/deployments/2156 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-core/deployments/2181 -> refs/environments/prod-core/deployments/2181 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-core/deployments/2189 -> refs/environments/prod-core/deployments/2189 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-core/deployments/2197 -> refs/environments/prod-core/deployments/2197 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-core/deployments/2204 -> refs/environments/prod-core/deployments/2204 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-core/deployments/2213 -> refs/environments/prod-core/deployments/2213 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-core/deployments/2227 -> refs/environments/prod-core/deployments/2227 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-core/deployments/2236 -> refs/environments/prod-core/deployments/2236 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-jotabasso/deployments/2130 -> refs/environments/prod-jotabasso/deployments/2130 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-jotabasso/deployments/2135 -> refs/environments/prod-jotabasso/deployments/2135 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-jotabasso/deployments/2140 -> refs/environments/prod-jotabasso/deployments/2140 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-jotabasso/deployments/2146 -> refs/environments/prod-jotabasso/deployments/2146 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-jotabasso/deployments/2155 -> refs/environments/prod-jotabasso/deployments/2155 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-jotabasso/deployments/2182 -> refs/environments/prod-jotabasso/deployments/2182 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-jotabasso/deployments/2190 -> refs/environments/prod-jotabasso/deployments/2190 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-jotabasso/deployments/2199 -> refs/environments/prod-jotabasso/deployments/2199 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-jotabasso/deployments/2205 -> refs/environments/prod-jotabasso/deployments/2205 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-jotabasso/deployments/2212 -> refs/environments/prod-jotabasso/deployments/2212 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-jotabasso/deployments/2226 -> refs/environments/prod-jotabasso/deployments/2226 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-scheffer/deployments/2198 -> refs/environments/prod-scheffer/deployments/2198 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-scheffer/deployments/2206 -> refs/environments/prod-scheffer/deployments/2206 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-scheffer/deployments/2214 -> refs/environments/prod-scheffer/deployments/2214 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/prod-scheffer/deployments/2225 -> refs/environments/prod-scheffer/deployments/2225 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-abs/deployments/2125 -> refs/environments/producao-abs/deployments/2125 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-abs/deployments/2132 -> refs/environments/producao-abs/deployments/2132 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-abs/deployments/2138 -> refs/environments/producao-abs/deployments/2138 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-abs/deployments/2143 -> refs/environments/producao-abs/deployments/2143 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-abs/deployments/2154 -> refs/environments/producao-abs/deployments/2154 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-abs/deployments/2179 -> refs/environments/producao-abs/deployments/2179 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-abs/deployments/2187 -> refs/environments/producao-abs/deployments/2187 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-abs/deployments/2196 -> refs/environments/producao-abs/deployments/2196 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-abs/deployments/2202 -> refs/environments/producao-abs/deployments/2202 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-abs/deployments/2210 -> refs/environments/producao-abs/deployments/2210 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-abs/deployments/2224 -> refs/environments/producao-abs/deployments/2224 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-viacometa/deployments/2126 -> refs/environments/producao-viacometa/deployments/2126 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-viacometa/deployments/2133 -> refs/environments/producao-viacometa/deployments/2133 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-viacometa/deployments/2139 -> refs/environments/producao-viacometa/deployments/2139 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-viacometa/deployments/2144 -> refs/environments/producao-viacometa/deployments/2144 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-viacometa/deployments/2153 -> refs/environments/producao-viacometa/deployments/2153 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-viacometa/deployments/2180 -> refs/environments/producao-viacometa/deployments/2180 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-viacometa/deployments/2188 -> refs/environments/producao-viacometa/deployments/2188 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-viacometa/deployments/2195 -> refs/environments/producao-viacometa/deployments/2195 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-viacometa/deployments/2203 -> refs/environments/producao-viacometa/deployments/2203 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-viacometa/deployments/2211 -> refs/environments/producao-viacometa/deployments/2211 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-viacometa/deployments/2223 -> refs/environments/producao-viacometa/deployments/2223 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/environments/producao-viacometa/deployments/2242 -> refs/environments/producao-viacometa/deployments/2242 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     release/02-03-2026 -> release/02-03-2026 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4484/head -> refs/merge-requests/4484/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4484/merge -> refs/merge-requests/4484/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4485/head -> refs/merge-requests/4485/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4485/merge -> refs/merge-requests/4485/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4486/head -> refs/merge-requests/4486/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4486/merge -> refs/merge-requests/4486/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4487/head -> refs/merge-requests/4487/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4487/merge -> refs/merge-requests/4487/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4488/head -> refs/merge-requests/4488/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4488/merge -> refs/merge-requests/4488/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4489/head -> refs/merge-requests/4489/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4489/merge -> refs/merge-requests/4489/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4490/head -> refs/merge-requests/4490/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4490/merge -> refs/merge-requests/4490/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4491/head -> refs/merge-requests/4491/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4491/merge -> refs/merge-requests/4491/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4492/head -> refs/merge-requests/4492/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4492/merge -> refs/merge-requests/4492/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4493/head -> refs/merge-requests/4493/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4493/merge -> refs/merge-requests/4493/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4494/head -> refs/merge-requests/4494/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4494/merge -> refs/merge-requests/4494/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4495/head -> refs/merge-requests/4495/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4495/merge -> refs/merge-requests/4495/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4496/head -> refs/merge-requests/4496/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4496/merge -> refs/merge-requests/4496/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4497/head -> refs/merge-requests/4497/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4497/merge -> refs/merge-requests/4497/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4498/head -> refs/merge-requests/4498/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4498/merge -> refs/merge-requests/4498/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4499/head -> refs/merge-requests/4499/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4499/merge -> refs/merge-requests/4499/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4500/head -> refs/merge-requests/4500/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4500/merge -> refs/merge-requests/4500/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4501/head -> refs/merge-requests/4501/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4501/merge -> refs/merge-requests/4501/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4502/head -> refs/merge-requests/4502/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4502/merge -> refs/merge-requests/4502/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4503/head -> refs/merge-requests/4503/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4503/merge -> refs/merge-requests/4503/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4504/head -> refs/merge-requests/4504/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4504/merge -> refs/merge-requests/4504/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4505/head -> refs/merge-requests/4505/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4505/merge -> refs/merge-requests/4505/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4506/head -> refs/merge-requests/4506/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4506/merge -> refs/merge-requests/4506/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4507/head -> refs/merge-requests/4507/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4507/merge -> refs/merge-requests/4507/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4508/head -> refs/merge-requests/4508/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4508/merge -> refs/merge-requests/4508/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4509/head -> refs/merge-requests/4509/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4509/merge -> refs/merge-requests/4509/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4510/head -> refs/merge-requests/4510/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4510/merge -> refs/merge-requests/4510/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4511/head -> refs/merge-requests/4511/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4511/merge -> refs/merge-requests/4511/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4512/head -> refs/merge-requests/4512/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4512/merge -> refs/merge-requests/4512/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4513/head -> refs/merge-requests/4513/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4513/merge -> refs/merge-requests/4513/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4514/head -> refs/merge-requests/4514/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4514/merge -> refs/merge-requests/4514/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4515/head -> refs/merge-requests/4515/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4515/merge -> refs/merge-requests/4515/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4516/head -> refs/merge-requests/4516/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4516/merge -> refs/merge-requests/4516/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4517/head -> refs/merge-requests/4517/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4517/merge -> refs/merge-requests/4517/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4518/head -> refs/merge-requests/4518/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4518/merge -> refs/merge-requests/4518/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4519/head -> refs/merge-requests/4519/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4519/merge -> refs/merge-requests/4519/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4520/head -> refs/merge-requests/4520/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4520/merge -> refs/merge-requests/4520/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4521/head -> refs/merge-requests/4521/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4521/merge -> refs/merge-requests/4521/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4522/head -> refs/merge-requests/4522/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4522/merge -> refs/merge-requests/4522/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4523/head -> refs/merge-requests/4523/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4523/merge -> refs/merge-requests/4523/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4524/head -> refs/merge-requests/4524/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4524/merge -> refs/merge-requests/4524/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4525/head -> refs/merge-requests/4525/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4525/merge -> refs/merge-requests/4525/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4526/head -> refs/merge-requests/4526/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4526/merge -> refs/merge-requests/4526/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4527/head -> refs/merge-requests/4527/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4527/merge -> refs/merge-requests/4527/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4528/head -> refs/merge-requests/4528/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4528/merge -> refs/merge-requests/4528/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4529/head -> refs/merge-requests/4529/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4529/merge -> refs/merge-requests/4529/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4530/head -> refs/merge-requests/4530/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4530/merge -> refs/merge-requests/4530/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4531/head -> refs/merge-requests/4531/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4531/merge -> refs/merge-requests/4531/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4532/head -> refs/merge-requests/4532/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4532/merge -> refs/merge-requests/4532/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4533/head -> refs/merge-requests/4533/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4533/merge -> refs/merge-requests/4533/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4534/head -> refs/merge-requests/4534/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4534/merge -> refs/merge-requests/4534/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4535/head -> refs/merge-requests/4535/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4535/merge -> refs/merge-requests/4535/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4536/head -> refs/merge-requests/4536/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4536/merge -> refs/merge-requests/4536/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4537/head -> refs/merge-requests/4537/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4537/merge -> refs/merge-requests/4537/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4538/head -> refs/merge-requests/4538/head (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/merge-requests/4538/merge -> refs/merge-requests/4538/merge (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/pipelines/2331929060 -> refs/pipelines/2331929060 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+ ! [remote rejected]     refs/pipelines/2332650051 -> refs/pipelines/2332650051 (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/build-homol.yml` without `workflow` scope)
+error: failed to push some refs to 'https://github.com/multbovinos/mbweb-rest.git'"
