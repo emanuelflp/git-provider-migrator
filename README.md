@@ -22,7 +22,7 @@ A CLI tool and Python library to migrate Git repositories between providers — 
 | Provider | Clone & push history | Token auth | LFS fetch | Batch via API | Branch listing via API | Archive after sync |
 |---|---|---|---|---|---|---|
 | **GitLab** | ✅ Full | ✅ `--gitlab-token` | ✅ | ✅ `--from-gitlab` | ✅ | ✅ `--archive-synced` |
-| **GitHub** | ✅ Full | ✅ `--gitlab-token` | ✅ | ❌ | ❌ | ❌ |
+| **GitHub** | ✅ Full | ✅ `--github-token` | ✅ | ❌ | ❌ | ❌ |
 | **Bitbucket** | ✅ Full | ⚠️ Embed in URL¹ | ✅ | ❌ | ❌ | ❌ |
 
 ¹ Bitbucket does not support token-as-password in the same way; credentials must be embedded directly in the HTTPS URL (`https://user:app_password@bitbucket.org/...`).
