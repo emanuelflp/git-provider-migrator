@@ -211,7 +211,7 @@ def main():
     if args.from_gitlab:
         _run_from_gitlab_mode(args, migrator, is_private, errors_output, gitlab_token)
     elif args.batch_file:
-        _run_batch_mode(args, migrator, is_private, errors_output, gitlab_token)
+        _run_batch_mode(args, migrator, errors_output, gitlab_token)
     else:
         _run_single_repo_mode(args, migrator, is_private, errors_output, gitlab_token)
 
@@ -326,7 +326,7 @@ def _run_from_gitlab_mode(args, migrator, is_private, errors_output, gitlab_toke
     sys.exit(0 if successful == len(results) else 1)
 
 
-def _run_batch_mode(args, migrator, is_private, errors_output, gitlab_token) -> None:
+def _run_batch_mode(args, migrator, errors_output, gitlab_token) -> None:
     """Mode 2: load repository list from a JSON batch file and migrate all repos."""
     logger.info(f"Loading repositories from {args.batch_file}")
     with open(args.batch_file, 'r') as f:

@@ -310,6 +310,24 @@ class GitHubMigrator:
             return False, msg
 
     @staticmethod
+    @staticmethod
+    def _blob_line_to_pattern(line: str, threshold_bytes: int) -> Optional[str]:
+        """Parse one cat-file output line; return an LFS pattern string or None."""
+        parts = line.split(" ", 3)
+        if len(parts) < 3 or parts[1] != "blob":
+            return None
+        try:
+            if int(parts[2]) <= threshold_bytes:
+                return None
+        except ValueError:
+            return None
+        path = parts[3].strip() if len(parts) > 3 else ""
+        if not path:
+            return None
+        ext = os.path.splitext(path)[1].lower()
+        return f"*{ext}" if ext else path
+
+    @staticmethod
     def _find_large_blob_extensions(mirror_path: str, threshold_bytes: int, log: "RepoLogger") -> set:
         """
         Return a set of file patterns (e.g. ``*.zip``) for blobs exceeding *threshold_bytes*.
@@ -330,29 +348,11 @@ class GitHubMigrator:
             capture_output=True, text=True, cwd=mirror_path,
         )
 
-        large_extensions: set = set()
-        for line in cat_file.stdout.splitlines():
-            parts = line.split(" ", 3)
-            if len(parts) < 3:
-                continue
-            obj_type = parts[1]
-            if obj_type != "blob":
-                continue
-            try:
-                size = int(parts[2])
-            except ValueError:
-                continue
-            if size <= threshold_bytes:
-                continue
-            path = parts[3].strip() if len(parts) > 3 else ""
-            if not path:
-                continue
-            ext = os.path.splitext(path)[1].lower()
-            if ext:
-                large_extensions.add(f"*{ext}")
-            else:
-                large_extensions.add(path)
-        return large_extensions
+        patterns = (
+            GitHubMigrator._blob_line_to_pattern(line, threshold_bytes)
+            for line in cat_file.stdout.splitlines()
+        )
+        return {p for p in patterns if p is not None}
 
     @staticmethod
     def _migrate_large_blobs_to_lfs(
@@ -729,7 +729,7 @@ class GitHubMigrator:
         if parsed.scheme not in ("https", "http") or not parsed.hostname:
             raise ValueError(f"Unsafe clone URL scheme: {parsed.scheme!r}")
 
-        _cmd = ["git", "clone", "--mirror", clone_url, mirror_path]
+        _cmd = ["git", "clone", "--mirror", clone_url, mirror_path]  # NOSONAR — URL validated above
         log.debug(f"$ git clone --mirror {_redact_url(clone_url)} {mirror_path}")
         log.info(f"Cloning {source_url} ...")
         try:
@@ -993,6 +993,14 @@ class GitHubMigrator:
                     reason=reason,
                 )
 
+        def _handle_future_error(repo_name: str, exc: Exception) -> None:
+            logger.error(f"Unexpected error migrating {repo_name}: {exc}")
+            source_url = next(r["source_url"] for r in repositories if r["repo_name"] == repo_name)
+            with results_lock:
+                results[repo_name] = {"success": False, "reason": str(exc), "source_url": source_url}
+            if errors_reporter is not None:
+                errors_reporter.write(repo_name=repo_name, source_url=source_url, reason=str(exc))
+
         if workers > 1:
             logger.info(f"Running migrations in parallel with {workers} workers...")
             with ThreadPoolExecutor(max_workers=workers) as executor:
@@ -1002,21 +1010,7 @@ class GitHubMigrator:
                     try:
                         future.result()
                     except Exception as exc:
-                        logger.error(f"Unexpected error migrating {repo_name}: {exc}")
-                        with results_lock:
-                            results[repo_name] = {
-                                "success": False,
-                                "reason": str(exc),
-                                "source_url": next(
-                                    r["source_url"] for r in repositories if r["repo_name"] == repo_name
-                                ),
-                            }
-                        if errors_reporter is not None:
-                            errors_reporter.write(
-                                repo_name=repo_name,
-                                source_url=results[repo_name]["source_url"],
-                                reason=str(exc),
-                            )
+                        _handle_future_error(repo_name, exc)
         else:
             for repo_config in repositories:
                 _migrate_one(repo_config)

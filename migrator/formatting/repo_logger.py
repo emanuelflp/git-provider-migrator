@@ -10,7 +10,8 @@ class RepoLogger:
         self._prefix = f"[{repo_name.replace(chr(10), '_').replace(chr(13), '_')}]"
 
     def _fmt(self, msg: str) -> str:
-        return f"{self._prefix} {msg}"
+        safe = msg.replace("\n", " ").replace("\r", " ")
+        return f"{self._prefix} {safe}"
 
     def info(self, msg: str) -> None:
         logger.info(self._fmt(msg))

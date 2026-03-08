@@ -55,7 +55,7 @@ class GitLabClient:
     def list_branches(self, project_id: int) -> List[str]:
         """Return list of branch names for a GitLab project."""
         try:
-            logger.debug(f"list_branches → project_id={project_id}")
+            logger.debug("list_branches → project_id=%d", project_id)
             project = self._gl.projects.get(project_id)
             branches = project.branches.list(all=True)
         except GitlabError as exc:
