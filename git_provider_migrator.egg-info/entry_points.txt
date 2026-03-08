@@ -1,0 +1,2 @@
+[console_scripts]
+git-provider-migrator = migrator.cli:main
