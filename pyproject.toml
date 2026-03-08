@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "git-provider-migrator"
-version = "1.0.1"
+version = "1.0.2"
 description = "Migrate Git repositories between providers (GitLab → GitHub)"
 readme = "README.md"
 requires-python = ">=3.8"

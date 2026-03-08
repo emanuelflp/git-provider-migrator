@@ -67,75 +67,9 @@ pip install -e .
 
 ---
 
-## Authentication
+## Destination: GitHub
 
-### Source providers
-
-The source can be any Git host that provides an HTTPS clone URL. For private repositories, an access token must be passed via `--source-token` (or `GITLAB_TOKEN` env var for GitLab).
-
-#### GitLab
-
-Create a [Personal Access Token](https://gitlab.com/-/profile/personal_access_tokens) with the `read_repository` scope.
-
-```bash
-export GITLAB_TOKEN="glpat-..."
-```
-
-For self-hosted instances, pass the base URL:
-
-```bash
-git-provider-migrator --gitlab-base-url https://gitlab.mycompany.com ...
-```
-
-#### GitHub (as source)
-
-Create a [Personal Access Token](https://github.com/settings/tokens) with the `repo` scope (classic) or `Contents: read` (fine-grained).
-
-```bash
-# pass directly as the source token
-git-provider-migrator --gitlab-token "ghp_..." --source-url https://github.com/org/repo.git ...
-```
-
-#### Bitbucket
-
-Create an [App Password](https://bitbucket.org/account/settings/app-passwords/) with `Repositories: Read` permission. Embed it in the clone URL:
-
-```bash
-# https://username:app_password@bitbucket.org/workspace/repo.git
-git-provider-migrator --source-url "https://user:apppassword@bitbucket.org/workspace/repo.git" ...
-```
-
-#### Azure DevOps
-
-Create a [Personal Access Token](https://dev.azure.com) with `Code: Read` scope. Embed it in the clone URL:
-
-```bash
-# https://user:token@dev.azure.com/org/project/_git/repo
-git-provider-migrator --source-url "https://user:token@dev.azure.com/org/project/_git/repo" ...
-```
-
-#### Gitea / Forgejo
-
-Create an API token in **Settings → Applications → Access Tokens** with `repository: read` permission:
-
-```bash
-git-provider-migrator --gitlab-token "your-gitea-token" \
-               --source-url   "https://gitea.mycompany.com/user/repo.git" ...
-```
-
-#### Any other provider
-
-Any HTTPS git URL with embedded credentials works:
-
-```bash
-git-provider-migrator --source-url "https://user:token@git.mycompany.com/repo.git" ...
-```
-
----
-
-### Destination: GitHub
-
-Create a [Personal Access Token](https://github.com/settings/tokens) with the following permissions:
+All migrations push to **GitHub**. Create a [Personal Access Token](https://github.com/settings/tokens) with the following permissions:
 
 | Token type | Required permissions |
 |---|---|
@@ -146,7 +80,9 @@ Create a [Personal Access Token](https://github.com/settings/tokens) with the fo
 export GITHUB_TOKEN="ghp_..."
 ```
 
-Tokens are resolved in this order of priority:
+### Token resolution order
+
+Tokens are resolved in this priority order:
 
 | Priority | Source | Details |
 |----------|--------|---------|
@@ -158,54 +94,151 @@ If a token is not found via any of the three sources, the tool exits with an err
 
 ---
 
-## Usage
+## Usage by Source Provider
 
-### Migrate a single repository
+### GitLab
+
+#### Authentication
+
+Create a [Personal Access Token](https://gitlab.com/-/profile/personal_access_tokens) with the `read_repository` scope.
 
 ```bash
-# From GitLab
-git-provider-migrator \
-  --source-url  https://gitlab.com/your-org/your-repo.git \
-  --repo-name   your-repo \
-  --private
+export GITLAB_TOKEN="glpat-..."
+```
 
-# From GitHub
-git-provider-migrator \
-  --source-url   https://github.com/source-org/your-repo.git \
-  --gitlab-token ghp_sourcetoken... \
-  --repo-name    your-repo \
-  --private
+For self-hosted instances, pass the base URL via `--gitlab-base-url`.
 
-# From Bitbucket
-git-provider-migrator \
-  --source-url  "https://user:apppassword@bitbucket.org/workspace/your-repo.git" \
-  --repo-name   your-repo \
-  --private
+#### Migrate a single repository
 
-# From Azure DevOps
+```bash
 git-provider-migrator \
-  --source-url  "https://user:token@dev.azure.com/org/project/_git/your-repo" \
-  --repo-name   your-repo \
+  --source-provider gitlab \
+  --source-url      https://gitlab.com/your-org/your-repo.git \
+  --repo-name       your-repo \
   --private
+```
 
-# From a self-hosted Gitea instance
+#### Migrate to a GitHub organization
+
+```bash
 git-provider-migrator \
-  --source-url   https://gitea.mycompany.com/user/your-repo.git \
+  --source-provider gitlab \
+  --github-org      your-github-org \
+  --source-url      https://gitlab.com/your-org/your-repo.git \
+  --repo-name       your-repo
+```
+
+#### Batch migration via GitLab API
+
+Automatically fetches the repository list via the GitLab API — no need to maintain a JSON file.
+
+```bash
+# All repos from a GitLab group
+git-provider-migrator --source-provider gitlab --from-gitlab --gitlab-namespace your-group
+
+# All repos from a GitLab user
+git-provider-migrator --source-provider gitlab --from-gitlab --gitlab-namespace username
+
+# All repos owned by the authenticated GitLab user
+git-provider-migrator --source-provider gitlab --from-gitlab
+
+# From a self-hosted GitLab instance
+git-provider-migrator --source-provider gitlab \
+  --from-gitlab \
+  --gitlab-base-url  https://gitlab.mycompany.com \
+  --gitlab-namespace your-group
+```
+
+#### Archive source projects after sync
+
+Pass `--archive-synced` to archive each GitLab project once all its branches are in sync:
+
+```bash
+git-provider-migrator --source-provider gitlab --from-gitlab --archive-synced
+```
+
+---
+
+### GitHub (as source)
+
+#### Authentication
+
+Create a [Personal Access Token](https://github.com/settings/tokens) with the `repo` scope (classic) or `Contents: read` (fine-grained).
+
+```bash
+git-provider-migrator \
+  --source-provider github \
+  --gitlab-token    ghp_sourcetoken... \
+  --source-url      https://github.com/source-org/your-repo.git \
+  --repo-name       your-repo \
+  --private
+```
+
+---
+
+### Bitbucket
+
+#### Authentication
+
+Create an [App Password](https://bitbucket.org/account/settings/app-passwords/) with `Repositories: Read` permission and embed it in the clone URL.
+
+```bash
+git-provider-migrator \
+  --source-provider bitbucket \
+  --source-url      "https://user:app_password@bitbucket.org/workspace/your-repo.git" \
+  --repo-name       your-repo \
+  --private
+```
+
+---
+
+### Azure DevOps
+
+#### Authentication
+
+Create a [Personal Access Token](https://dev.azure.com) with `Code: Read` scope and embed it in the clone URL.
+
+```bash
+git-provider-migrator \
+  --source-url "https://user:token@dev.azure.com/org/project/_git/your-repo" \
+  --repo-name  your-repo \
+  --private
+```
+
+---
+
+### Gitea / Forgejo
+
+#### Authentication
+
+Create an API token in **Settings → Applications → Access Tokens** with `repository: read` permission.
+
+```bash
+git-provider-migrator \
   --gitlab-token your-gitea-token \
+  --source-url   https://gitea.mycompany.com/user/your-repo.git \
   --repo-name    your-repo \
   --private
 ```
 
-### Migrate to a GitHub organization
+---
+
+### Any other provider
+
+Any HTTPS URL with embedded credentials works out of the box:
 
 ```bash
 git-provider-migrator \
-  --github-org  your-github-org \
-  --source-url  https://gitlab.com/old-org/project.git \
-  --repo-name   project
+  --source-url "https://user:token@git.mycompany.com/repo.git" \
+  --repo-name  your-repo \
+  --private
 ```
 
-### Batch migration from a JSON file
+---
+
+## Batch Migration from a JSON File
+
+Works with any mix of source providers in the same file:
 
 ```json
 [
@@ -230,26 +263,6 @@ git-provider-migrator \
 
 ```bash
 git-provider-migrator --batch-file repositories.json
-```
-
-### Batch migration from GitLab API
-
-Automatically fetches the repository list via the GitLab API — no need to maintain a JSON file.
-
-```bash
-# All repos from a GitLab group
-git-provider-migrator --from-gitlab --gitlab-namespace your-group
-
-# All repos from a GitLab user
-git-provider-migrator --from-gitlab --gitlab-namespace username
-
-# All repos owned by the authenticated GitLab user
-git-provider-migrator --from-gitlab
-
-# From a self-hosted GitLab instance
-git-provider-migrator --from-gitlab \
-               --gitlab-base-url https://gitlab.mycompany.com \
-               --gitlab-namespace your-group
 ```
 
 ---
@@ -346,7 +359,7 @@ for repo, info in results.items():
 1. **Compare** — if the repository already exists on GitHub, all branches are compared against the source. If GitHub is up to date, the migration is skipped.
 2. **Clone** — the source is cloned with `git clone --mirror` into a temporary directory.
 3. **LFS** — existing LFS objects are fetched from the source; plain blobs larger than 100 MB are automatically converted to LFS via `git lfs migrate import`.
-4. **Push** — all branches are pushed in chronological commit slices (configurable via `--commits-per-slice`) to stay within GitHub's 2 GB per-push limit.
+4. **Push** — all refs are pushed with `git push --mirror` by default. For repositories that exceed GitHub's 2 GB per-push limit, use `--commits-per-slice N` to push branches in commit slices.
 5. **LFS push** — LFS objects are pushed to GitHub with `git lfs push --all`.
 6. **Cleanup** — the temporary clone is removed.
 
