@@ -7,7 +7,7 @@ class RepoLogger:
     """Thin wrapper that prefixes every log message with [repo_name]."""
 
     def __init__(self, repo_name: str):
-        self._prefix = f"[{repo_name}]"
+        self._prefix = f"[{repo_name.replace(chr(10), '_').replace(chr(13), '_')}]"
 
     def _fmt(self, msg: str) -> str:
         return f"{self._prefix} {msg}"

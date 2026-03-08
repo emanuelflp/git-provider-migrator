@@ -6,6 +6,8 @@ Example script showing how to use the GitHubMigrator class programmatically
 import os
 from migrator.clients.github import GitHubMigrator
 
+_MISSING_GITHUB_TOKEN = "Please set GITHUB_TOKEN environment variable"
+
 # Example 1: Migrate a single repository
 def example_single_repo():
     """Example of migrating a single repository"""
@@ -15,7 +17,7 @@ def example_single_repo():
     gitlab_token = os.environ.get("GITLAB_TOKEN")
 
     if not github_token:
-        print("Please set GITHUB_TOKEN environment variable")
+        print(_MISSING_GITHUB_TOKEN)
         return
 
     # Initialize migrator
@@ -28,7 +30,6 @@ def example_single_repo():
         gitlab_token=gitlab_token,
         private=True,
         description="My project migrated from GitLab",
-        wait=True
     )
 
     if success:
@@ -45,7 +46,7 @@ def example_batch_migration():
     gitlab_token = os.environ.get("GITLAB_TOKEN")
 
     if not github_token:
-        print("Please set GITHUB_TOKEN environment variable")
+        print(_MISSING_GITHUB_TOKEN)
         return
 
     # Initialize migrator
@@ -77,7 +78,6 @@ def example_batch_migration():
     results = migrator.migrate_repositories(
         repositories=repositories,
         gitlab_token=gitlab_token,
-        wait=True
     )
 
     # Print results
@@ -104,7 +104,7 @@ def example_org_migration():
     gitlab_token = os.environ.get("GITLAB_TOKEN")
 
     if not github_token:
-        print("Please set GITHUB_TOKEN environment variable")
+        print(_MISSING_GITHUB_TOKEN)
         return
 
     # Initialize migrator with organization
@@ -120,7 +120,6 @@ def example_org_migration():
         gitlab_token=gitlab_token,
         private=True,
         description="Project migrated from GitLab",
-        wait=True
     )
 
     if success:
@@ -136,7 +135,7 @@ def example_check_existence():
     github_token = os.environ.get("GITHUB_TOKEN")
 
     if not github_token:
-        print("Please set GITHUB_TOKEN environment variable")
+        print(_MISSING_GITHUB_TOKEN)
         return
 
     migrator = GitHubMigrator(github_token=github_token)

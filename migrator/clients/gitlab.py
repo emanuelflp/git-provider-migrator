@@ -39,7 +39,8 @@ class GitLabClient:
     def list_group_repos(self, group: str) -> List[Dict]:
         """List all repositories inside a GitLab group / subgroup (recursive)."""
         try:
-            logger.debug(f"list_group_repos → group={group}")
+            safe_group = group.replace("\n", "_").replace("\r", "_")
+            logger.debug(f"list_group_repos → group={safe_group}")
             gl_group = self._gl.groups.get(group)
             projects = gl_group.projects.list(
                 all=True, include_subgroups=True, archived=False
@@ -76,7 +77,7 @@ class GitLabClient:
             logger.debug(f"archive_project → project_id={project_id}")
             project = self._gl.projects.get(project_id)
             project.archive()
-            logger.debug(f"archive_project ← success")
+            logger.debug("archive_project ← success")
             return True
         except GitlabError as exc:
             logger.error(f"Failed to archive GitLab project {project_id}: {exc}")

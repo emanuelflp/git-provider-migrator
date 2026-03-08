@@ -184,7 +184,40 @@ def main():
     if args.debug:
         logger.debug("DEBUG logging enabled")
 
-    # ── Provider validation ──────────────────────────────────────────────
+    # ── LFS check ───────────────────────────────────────────────────────
+    if not args.skip_lfs:
+        if _lfs_available():
+            logger.info("git-lfs detected — LFS support enabled")
+        else:
+            logger.warning(
+                "git-lfs not found on PATH — LFS binary objects will NOT be migrated. "
+                "Install git-lfs (https://git-lfs.com) or pass --skip-lfs to suppress this warning."
+            )
+
+    # ── Token resolution ─────────────────────────────────────────────────
+    default_csv_path = Path(__file__).resolve().parent.parent / "tokens.csv"
+    tokens_csv_path = Path(args.tokens_csv) if args.tokens_csv else default_csv_path
+
+    _validate_providers(args)
+    github_token, gitlab_token = _resolve_tokens(args, tokens_csv_path)
+
+    # ── Shared setup ─────────────────────────────────────────────────────
+    migrator = GitHubMigrator(github_token=github_token, github_org=args.github_org)
+    is_private = not args.public if args.public else args.private
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    default_errors_path = Path(__file__).resolve().parent.parent / f"migration_errors_{timestamp}.csv"
+    errors_output = Path(args.errors_output) if args.errors_output else default_errors_path
+
+    if args.from_gitlab:
+        _run_from_gitlab_mode(args, migrator, is_private, errors_output, gitlab_token)
+    elif args.batch_file:
+        _run_batch_mode(args, migrator, is_private, errors_output, gitlab_token)
+    else:
+        _run_single_repo_mode(args, migrator, is_private, errors_output, gitlab_token)
+
+
+def _validate_providers(args) -> None:
+    """Validate provider-related arguments and log the chosen provider pair."""
     if args.dest_provider != "github":
         logger.error(
             f"Destination provider '{args.dest_provider}' is not yet supported. "
@@ -212,23 +245,11 @@ def main():
             f"(got '{args.source_provider}') — flag will be ignored."
         )
 
-    logger.info(
-        f"Provider: {args.source_provider} → {args.dest_provider}"
-    )
+    logger.info(f"Provider: {args.source_provider} → {args.dest_provider}")
 
-    # ── LFS check ───────────────────────────────────────────────────────
-    if not args.skip_lfs:
-        if _lfs_available():
-            logger.info("git-lfs detected — LFS support enabled")
-        else:
-            logger.warning(
-                "git-lfs not found on PATH — LFS binary objects will NOT be migrated. "
-                "Install git-lfs (https://git-lfs.com) or pass --skip-lfs to suppress this warning."
-            )
 
-    # ── Token resolution ─────────────────────────────────────────────────
-    default_csv_path = Path(__file__).resolve().parent.parent / "tokens.csv"
-    tokens_csv_path = Path(args.tokens_csv) if args.tokens_csv else default_csv_path
+def _resolve_tokens(args, tokens_csv_path) -> tuple:
+    """Resolve GitHub and GitLab tokens from CLI args, CSV file, or environment variables."""
     csv_tokens = load_tokens_from_csv(tokens_csv_path)
 
     github_token = (
@@ -250,92 +271,85 @@ def main():
         )
         sys.exit(1)
 
-    # ── Shared setup ─────────────────────────────────────────────────────
-    migrator = GitHubMigrator(github_token=github_token, github_org=args.github_org)
-    is_private = not args.public if args.public else args.private
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    default_errors_path = Path(__file__).resolve().parent.parent / f"migration_errors_{timestamp}.csv"
-    errors_output = Path(args.errors_output) if args.errors_output else default_errors_path
+    return (github_token, gitlab_token)
 
-    # ------------------------------------------------------------------
-    # Mode 1: fetch repo list from source provider API
-    # ------------------------------------------------------------------
-    if args.from_gitlab:
-        if not gitlab_token:
-            logger.error(
-                "A source token is required when using --from-gitlab. "
-                "Provide --gitlab-token, set GITLAB_TOKEN, or add gitlab_token to %s",
-                tokens_csv_path
-            )
-            sys.exit(1)
 
-        gl_client = GitLabClient(gitlab_token=gitlab_token, base_url=args.gitlab_base_url)
+def _run_from_gitlab_mode(args, migrator, is_private, errors_output, gitlab_token) -> None:
+    """Mode 1: fetch repository list from the GitLab API and migrate all repos."""
+    if not gitlab_token:
+        logger.error(
+            "A source token is required when using --from-gitlab. "
+            "Provide --gitlab-token, set GITLAB_TOKEN, or add gitlab_token to %s",
+            args.gitlab_base_url
+        )
+        sys.exit(1)
 
-        logger.info(f"Fetching repositories from GitLab ({args.gitlab_base_url})...")
+    gl_client = GitLabClient(gitlab_token=gitlab_token, base_url=args.gitlab_base_url)
 
-        if args.gitlab_namespace:
-            try:
-                projects = gl_client.list_group_repos(args.gitlab_namespace)
-                logger.info(f"Found {len(projects)} repos in group '{args.gitlab_namespace}'")
-            except GitlabError as e:
-                if getattr(e, 'response_code', None) in (404, 403):
-                    logger.info(f"Not a group, trying as user '{args.gitlab_namespace}'...")
-                    projects = gl_client.list_user_repos(args.gitlab_namespace)
-                    logger.info(f"Found {len(projects)} repos for user '{args.gitlab_namespace}'")
-                else:
-                    raise
-        else:
-            projects = gl_client.list_user_repos()
-            logger.info(f"Found {len(projects)} repos for the authenticated GitLab user")
+    logger.info(f"Fetching repositories from GitLab ({args.gitlab_base_url})...")
 
-        if not projects:
-            logger.warning("No repositories found. Nothing to migrate.")
-            sys.exit(0)
+    if args.gitlab_namespace:
+        try:
+            projects = gl_client.list_group_repos(args.gitlab_namespace)
+            logger.info(f"Found {len(projects)} repos in group '{args.gitlab_namespace}'")
+        except GitlabError as e:
+            if getattr(e, 'response_code', None) in (404, 403):
+                logger.info(f"Not a group, trying as user '{args.gitlab_namespace}'...")
+                projects = gl_client.list_user_repos(args.gitlab_namespace)
+                logger.info(f"Found {len(projects)} repos for user '{args.gitlab_namespace}'")
+            else:
+                raise
+    else:
+        projects = gl_client.list_user_repos()
+        logger.info(f"Found {len(projects)} repos for the authenticated GitLab user")
 
-        repositories = gl_client.repos_to_migration_list(projects, private=is_private)
+    if not projects:
+        logger.warning("No repositories found. Nothing to migrate.")
+        sys.exit(0)
 
-        with ErrorsReporter(errors_output) as reporter:
-            results = migrator.migrate_repositories(
-                repositories=repositories,
-                gitlab_token=gitlab_token,
-                gitlab_client=gl_client,
-                archive_synced=args.archive_synced,
-                errors_reporter=reporter,
-                workers=args.workers,
-                enable_lfs=not args.skip_lfs,
-                commits_per_slice=args.commits_per_slice,
-            )
+    repositories = gl_client.repos_to_migration_list(projects, private=is_private)
 
-        _print_summary(results)
-        successful = sum(1 for info in results.values() if info["success"])
-        sys.exit(0 if successful == len(results) else 1)
+    with ErrorsReporter(errors_output) as reporter:
+        results = migrator.migrate_repositories(
+            repositories=repositories,
+            gitlab_token=gitlab_token,
+            gitlab_client=gl_client,
+            archive_synced=args.archive_synced,
+            errors_reporter=reporter,
+            workers=args.workers,
+            enable_lfs=not args.skip_lfs,
+            commits_per_slice=args.commits_per_slice,
+        )
 
-    # ------------------------------------------------------------------
-    # Mode 2: batch file (JSON)
-    # ------------------------------------------------------------------
-    if args.batch_file:
-        logger.info(f"Loading repositories from {args.batch_file}")
-        with open(args.batch_file, 'r') as f:
-            repositories = json.load(f)
+    _print_summary(results)
+    successful = sum(1 for info in results.values() if info["success"])
+    sys.exit(0 if successful == len(results) else 1)
 
-        with ErrorsReporter(errors_output) as reporter:
-            results = migrator.migrate_repositories(
-                repositories=repositories,
-                gitlab_token=gitlab_token,
-                archive_synced=args.archive_synced,
-                errors_reporter=reporter,
-                workers=args.workers,
-                enable_lfs=not args.skip_lfs,
-                commits_per_slice=args.commits_per_slice,
-            )
 
-        _print_summary(results)
-        successful = sum(1 for info in results.values() if info["success"])
-        sys.exit(0 if successful == len(results) else 1)
+def _run_batch_mode(args, migrator, is_private, errors_output, gitlab_token) -> None:
+    """Mode 2: load repository list from a JSON batch file and migrate all repos."""
+    logger.info(f"Loading repositories from {args.batch_file}")
+    with open(args.batch_file, 'r') as f:
+        repositories = json.load(f)
 
-    # ------------------------------------------------------------------
-    # Mode 3: single repository
-    # ------------------------------------------------------------------
+    with ErrorsReporter(errors_output) as reporter:
+        results = migrator.migrate_repositories(
+            repositories=repositories,
+            gitlab_token=gitlab_token,
+            archive_synced=args.archive_synced,
+            errors_reporter=reporter,
+            workers=args.workers,
+            enable_lfs=not args.skip_lfs,
+            commits_per_slice=args.commits_per_slice,
+        )
+
+    _print_summary(results)
+    successful = sum(1 for info in results.values() if info["success"])
+    sys.exit(0 if successful == len(results) else 1)
+
+
+def _run_single_repo_mode(args, migrator, is_private, errors_output, gitlab_token) -> None:
+    """Mode 3: migrate a single repository specified via --source-url and --repo-name."""
     if not args.source_url or not args.repo_name:
         logger.error("For single repository migration, both --source-url and --repo-name are required")
         logger.info("Or use --batch-file / --from-gitlab for migrating multiple repositories")
@@ -359,7 +373,6 @@ def main():
         )
 
     sys.exit(0 if success else 1)
-
 
 
 def _print_summary(results: Dict[str, Dict]) -> None:

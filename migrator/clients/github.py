@@ -1,11 +1,13 @@
 import logging
 import os
+import re
 import shutil
 import subprocess
 import tempfile
 import threading
 import time
 import requests
+from urllib.parse import urlparse as _urlparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Dict, List, Optional, Tuple, TYPE_CHECKING
 
@@ -18,6 +20,9 @@ if TYPE_CHECKING:
     from migrator.clients.gitlab import GitLabClient
 
 logger = logging.getLogger("migrator")
+
+_REFS_HEADS = "refs/heads/"
+_REPO_NAME_RE = re.compile(r'^[a-zA-Z0-9._\-]+$')
 
 
 class GitHubMigrator:
@@ -48,6 +53,12 @@ class GitHubMigrator:
         response.raise_for_status()
         return response.json()["login"]
 
+    def _safe_repo_name(self, repo_name: str) -> str:
+        """Validate repo_name contains only safe characters for URL path construction."""
+        if not _REPO_NAME_RE.match(repo_name):
+            raise ValueError(f"Invalid repository name: {repo_name!r}")
+        return repo_name
+
     def check_repo_exists(self, repo_name: str) -> Optional[Dict]:
         """
         Check if a repository already exists on GitHub.
@@ -55,6 +66,7 @@ class GitHubMigrator:
         Returns:
             The repo info dict if it exists, None otherwise.
         """
+        repo_name = self._safe_repo_name(repo_name)
         owner = self.github_org if self.github_org else self.get_github_user()
         url = f"{self.github_api_base}/repos/{owner}/{repo_name}"
         logger.debug(f"check_repo_exists → GET {url}")
@@ -71,6 +83,7 @@ class GitHubMigrator:
 
     def get_github_latest_commit(self, repo_name: str, branch: str) -> Optional[str]:
         """Return the latest commit SHA on *branch* from the GitHub repo, or None."""
+        repo_name = self._safe_repo_name(repo_name)
         owner = self.github_org if self.github_org else self.get_github_user()
         url = f"{self.github_api_base}/repos/{owner}/{repo_name}/commits/{branch}"
         logger.debug(f"get_github_latest_commit → GET {url}")
@@ -90,6 +103,7 @@ class GitHubMigrator:
         was just created and has never received a push. It may also return an
         empty array on the /branches endpoint in some edge cases.
         """
+        repo_name = self._safe_repo_name(repo_name)
         owner = self.github_org if self.github_org else self.get_github_user()
 
         # /git/refs returns 409 for a truly empty repo, 200 with [] if there are no refs,
@@ -113,6 +127,7 @@ class GitHubMigrator:
 
     def get_github_branches(self, repo_name: str) -> List[str]:
         """Return the list of branch names present in the GitHub repo."""
+        repo_name = self._safe_repo_name(repo_name)
         owner = self.github_org if self.github_org else self.get_github_user()
         branches = []
         page = 1
@@ -227,6 +242,7 @@ class GitHubMigrator:
         Returns:
             (in_sync: bool, message: str)
         """
+        repo_name = self._safe_repo_name(repo_name)
         log = log or RepoLogger(repo_name)
         gh_sha = self.get_github_latest_commit(repo_name, default_branch)
         gl_sha = self.get_gitlab_latest_commit(source_url, default_branch, gitlab_token)
@@ -294,32 +310,19 @@ class GitHubMigrator:
             return False, msg
 
     @staticmethod
-    def _migrate_large_blobs_to_lfs(
-        mirror_path: str,
-        log: "RepoLogger",
-        size_threshold_mb: int = 100,
-    ) -> bool:
+    def _find_large_blob_extensions(mirror_path: str, threshold_bytes: int, log: "RepoLogger") -> set:
         """
-        Convert any blob larger than *size_threshold_mb* MB into a Git LFS object
-        in-place, rewriting the mirror's history via ``git lfs migrate import``.
-
-        This is needed when the source repo (GitLab) stored large files as plain
-        Git blobs — GitHub rejects pushes containing files > 100 MB.
-
-        Returns True if any blobs were migrated (history was rewritten), False otherwise.
+        Return a set of file patterns (e.g. ``*.zip``) for blobs exceeding *threshold_bytes*.
+        Returns an empty set when nothing exceeds the threshold.
         """
-        threshold_bytes = size_threshold_mb * 1024 * 1024
-
-        # Find all blobs larger than the threshold across all refs
         log.debug(f"$ git rev-list --objects --all  (cwd={mirror_path})")
         rev_list = subprocess.run(
             ["git", "rev-list", "--objects", "--all"],
             capture_output=True, text=True, cwd=mirror_path,
         )
         if rev_list.returncode != 0 or not rev_list.stdout.strip():
-            return False
+            return set()
 
-        # cat-file --batch-check reads sha + type + size from stdin
         log.debug(f"$ git cat-file --batch-check  (cwd={mirror_path})")
         cat_file = subprocess.run(
             ["git", "cat-file", "--batch-check=%(objectname) %(objecttype) %(objectsize) %(rest)"],
@@ -341,7 +344,6 @@ class GitHubMigrator:
                 continue
             if size <= threshold_bytes:
                 continue
-            # parts[3] is the file path (may be empty for unreachable blobs)
             path = parts[3].strip() if len(parts) > 3 else ""
             if not path:
                 continue
@@ -350,6 +352,25 @@ class GitHubMigrator:
                 large_extensions.add(f"*{ext}")
             else:
                 large_extensions.add(path)
+        return large_extensions
+
+    @staticmethod
+    def _migrate_large_blobs_to_lfs(
+        mirror_path: str,
+        log: "RepoLogger",
+        size_threshold_mb: int = 100,
+    ) -> bool:
+        """
+        Convert any blob larger than *size_threshold_mb* MB into a Git LFS object
+        in-place, rewriting the mirror's history via ``git lfs migrate import``.
+
+        This is needed when the source repo (GitLab) stored large files as plain
+        Git blobs — GitHub rejects pushes containing files > 100 MB.
+
+        Returns True if any blobs were migrated (history was rewritten), False otherwise.
+        """
+        threshold_bytes = size_threshold_mb * 1024 * 1024
+        large_extensions = GitHubMigrator._find_large_blob_extensions(mirror_path, threshold_bytes, log)
 
         if not large_extensions:
             log.debug("No blobs above size threshold — skipping lfs migrate import")
@@ -361,7 +382,6 @@ class GitHubMigrator:
             f"(patterns: {exts_str})..."
         )
 
-        # git lfs migrate import rewrites history in the bare mirror
         migrate_cmd = [
             "git", "lfs", "migrate", "import",
             "--everything",
@@ -452,7 +472,7 @@ class GitHubMigrator:
 
         After all slices are pushed, the real branch ref is updated to its final SHA.
         """
-        short = ref.replace("refs/heads/", "")
+        short = ref.replace(_REFS_HEADS, "")
         commits = self._get_branch_commits(mirror_path, ref)
         total = len(commits)
 
@@ -478,12 +498,12 @@ class GitHubMigrator:
 
         for idx, sha in enumerate(unique_checkpoints, start=1):
             is_last = (idx == len(unique_checkpoints))
-            push_ref = f"{sha}:refs/heads/{short}"
+            push_ref = f"{sha}:{_REFS_HEADS}{short}"
             label = f"slice {idx}/{len(unique_checkpoints)} ({sha[:8]})"
             if is_last:
                 label += " [final]"
             log.info(f"    {label}")
-            log.debug(f"$ git push --force {_redact_url(remote_url)} {sha[:8]}:refs/heads/{short}  (cwd={mirror_path})")
+            log.debug(f"$ git push --force {_redact_url(remote_url)} {sha[:8]}:{_REFS_HEADS}{short}  (cwd={mirror_path})")
 
             result = subprocess.run(
                 ["git", "push", "--force", remote_url, push_ref],
@@ -517,9 +537,9 @@ class GitHubMigrator:
           3. Other refs (notes, etc.) — best-effort, failures are silently skipped.
         """
         refs = self._get_mirror_refs(mirror_path)
-        branches = [r for r in refs if r.startswith("refs/heads/")]
+        branches = [r for r in refs if r.startswith(_REFS_HEADS)]
         tags     = [r for r in refs if r.startswith("refs/tags/")]
-        other    = [r for r in refs if not r.startswith("refs/heads/") and not r.startswith("refs/tags/")]
+        other    = [r for r in refs if not r.startswith(_REFS_HEADS) and not r.startswith("refs/tags/")]
 
         log.info(f"Pushing {len(branches)} branch(es), {len(tags)} tag(s) (slice mode, {commits_per_slice} commits/slice)...")
 
@@ -545,7 +565,7 @@ class GitHubMigrator:
             log.debug(f"  stderr: {result.stderr.strip()}")
             if result.returncode != 0:
                 raise RuntimeError(f"git push --tags failed: {result.stderr.strip()}")
-            log.info(f"  ✓ tags pushed successfully")
+            log.info("  ✓ tags pushed successfully")
 
         # ── other refs ───────────────────────────────────────────────────────
         for ref in other:
@@ -572,6 +592,209 @@ class GitHubMigrator:
         port_part = f":{parsed.port}" if parsed.port else ""
         path = parsed.path  # already starts with /
         return f"{parsed.scheme}://{username}:{token}@{host}{port_part}{path}"
+
+    def _maybe_archive(
+        self,
+        archive_synced: bool,
+        gitlab_client: Optional["GitLabClient"],
+        gitlab_project_id: Optional[int],
+        log: "RepoLogger",
+    ) -> None:
+        """Archive the GitLab project if archive_synced is True and client/id are available."""
+        if archive_synced and gitlab_client and gitlab_project_id:
+            log.info(f"archiving GitLab project {gitlab_project_id}...")
+            if gitlab_client.archive_project(gitlab_project_id):
+                log.info("✓ GitLab project archived successfully")
+            else:
+                log.warning("⚠ Failed to archive GitLab project")
+
+    def _check_sync_status(
+        self,
+        repo_name: str,
+        existing_repo: Dict,
+        source_url: str,
+        gitlab_client: Optional["GitLabClient"],
+        gitlab_project_id: Optional[int],
+        gitlab_token: Optional[str],
+        archive_synced: bool,
+        log: "RepoLogger",
+    ) -> Tuple[bool, Optional[Dict]]:
+        """
+        Check whether an already-existing GitHub repo is fully in sync with GitLab.
+
+        Returns:
+            (True, result_dict)  if fully synced (repo should NOT be re-migrated)
+            (False, None)        if empty or behind (migration should proceed)
+        """
+        owner = self.github_org if self.github_org else self.get_github_user()
+
+        if self.is_repo_empty(repo_name):
+            log.info(
+                f"Repository {owner}/{repo_name} exists but is empty — "
+                f"proceeding with migration..."
+            )
+            return False, None
+
+        default_branch = existing_repo.get("default_branch") or "main"
+        log.info(
+            f"Repository {owner}/{repo_name} already exists — "
+            f"validating all branches..."
+        )
+
+        if gitlab_client and gitlab_project_id:
+            gitlab_branches = gitlab_client.list_branches(gitlab_project_id)
+        else:
+            gitlab_branches = [default_branch]
+
+        log.info(
+            f"found {len(gitlab_branches)} GitLab branch(es): "
+            f"{', '.join(gitlab_branches)}"
+        )
+
+        all_synced, _ = self.compare_all_branches(
+            repo_name=repo_name,
+            source_url=source_url,
+            gitlab_branches=gitlab_branches,
+            gitlab_token=gitlab_token,
+            log=log,
+        )
+
+        if all_synced:
+            log.info("✓ All branches are in sync with GitHub")
+            self._maybe_archive(archive_synced, gitlab_client, gitlab_project_id, log)
+            return True, {"status": "synced", "reason": ""}
+
+        log.info(
+            "GitHub is behind GitLab — resuming migration to sync missing commits..."
+        )
+        return False, None
+
+    def _create_github_repo(
+        self,
+        repo_name: str,
+        private: bool,
+        description: Optional[str],
+        log: "RepoLogger",
+    ) -> Optional[Dict]:
+        """
+        Create an empty GitHub repository.
+
+        Returns:
+            None on success, or a ``{"status": "synced", ...}`` dict on a 422 race condition.
+        Raises:
+            requests.HTTPError on unexpected API errors.
+        """
+        owner = self.github_org if self.github_org else self.get_github_user()
+        url = (
+            f"{self.github_api_base}/orgs/{self.github_org}/repos"
+            if self.github_org
+            else f"{self.github_api_base}/user/repos"
+        )
+        repo_data: Dict = {"name": repo_name, "private": private, "auto_init": False}
+        if description:
+            repo_data["description"] = description
+
+        log.info(f"Creating repository {owner}/{repo_name}...")
+        create_response = requests.post(url, headers=self.headers, json=repo_data)
+
+        if create_response.status_code == 201:
+            log.info(f"Repository {owner}/{repo_name} created successfully")
+            return None
+        if create_response.status_code == 422:
+            log.warning(f"Repository {owner}/{repo_name} already exists (race condition)")
+            return {"status": "synced", "reason": "Repository appeared during migration"}
+        create_response.raise_for_status()
+        return None
+
+    def _clone_mirror_and_push(
+        self,
+        source_url: str,
+        clone_url: str,
+        github_push_url: str,
+        repo_name: str,
+        mirror_path: str,
+        enable_lfs: bool,
+        commits_per_slice: int,
+        log: "RepoLogger",
+    ) -> None:
+        """
+        Clone the source repo as a mirror and push all refs to GitHub.
+
+        Handles Git LFS fetching, large-blob conversion, and sliced pushes.
+        Raises RuntimeError on git command failures.
+        """
+        owner = self.github_org if self.github_org else self.get_github_user()
+
+        parsed = _urlparse(clone_url)
+        if parsed.scheme not in ("https", "http") or not parsed.hostname:
+            raise ValueError(f"Unsafe clone URL scheme: {parsed.scheme!r}")
+
+        _cmd = ["git", "clone", "--mirror", clone_url, mirror_path]
+        log.debug(f"$ git clone --mirror {_redact_url(clone_url)} {mirror_path}")
+        log.info(f"Cloning {source_url} ...")
+        try:
+            clone_result = subprocess.run(
+                _cmd,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            log.debug(f"git clone stdout: {clone_result.stdout.strip()}")
+            log.debug(f"git clone stderr: {clone_result.stderr.strip()}")
+
+            if enable_lfs and _lfs_available() and self._repo_uses_lfs(mirror_path):
+                log.info("LFS objects detected — fetching all LFS objects from GitLab...")
+                _cmd = ["git", "lfs", "fetch", "--all"]
+                log.debug(f"$ git lfs fetch --all  (cwd={mirror_path})")
+                lfs_fetch_result = subprocess.run(
+                    _cmd,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    cwd=mirror_path,
+                    env={**os.environ, "GIT_LFS_SKIP_SMUDGE": "0"},
+                )
+                log.debug(f"git lfs fetch stdout: {lfs_fetch_result.stdout.strip()}")
+                log.debug(f"git lfs fetch stderr: {lfs_fetch_result.stderr.strip()}")
+            elif enable_lfs and not _lfs_available() and self._repo_uses_lfs(mirror_path):
+                log.warning(
+                    "LFS objects detected but git-lfs is NOT installed — "
+                    "LFS pointers will be migrated but binary objects will be MISSING. "
+                    "Install git-lfs and re-run to migrate LFS objects."
+                )
+
+            if enable_lfs and _lfs_available():
+                self._migrate_large_blobs_to_lfs(mirror_path, log)
+
+            log.info(f"Pushing to {owner}/{repo_name} ...")
+            self._push_in_batches(
+                mirror_path=mirror_path,
+                remote_url=github_push_url,
+                log=log,
+                commits_per_slice=commits_per_slice,
+            )
+
+            if enable_lfs and _lfs_available() and self._repo_uses_lfs(mirror_path):
+                log.info("Pushing LFS objects to GitHub...")
+                _cmd = ["git", "lfs", "push", "--all", github_push_url]
+                log.debug(f"$ git lfs push --all {_redact_url(github_push_url)}  (cwd={mirror_path})")
+                lfs_push_result = subprocess.run(
+                    _cmd,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    cwd=mirror_path,
+                )
+                log.debug(f"git lfs push stdout: {lfs_push_result.stdout.strip()}")
+                log.debug(f"git lfs push stderr: {lfs_push_result.stderr.strip()}")
+                log.info("✓ LFS objects pushed successfully")
+
+        except subprocess.CalledProcessError as e:
+            stdout = (e.stdout or "").strip()
+            stderr = (e.stderr or "").strip()
+            log.debug(f"git command failed — stdout: {stdout}")
+            log.debug(f"git command failed — stderr: {stderr}")
+            raise RuntimeError(f"git operation failed: {stderr}") from e
 
     def start_import(
         self,
@@ -607,77 +830,24 @@ class GitHubMigrator:
 
         existing_repo = self.check_repo_exists(repo_name)
         if existing_repo:
-            if self.is_repo_empty(repo_name):
-                log.info(
-                    f"Repository {owner}/{repo_name} exists but is empty — "
-                    f"proceeding with migration..."
-                )
-                # Fall through to clone+push below (skip comparison)
-            else:
-                default_branch = existing_repo.get("default_branch") or "main"
-                log.info(
-                    f"Repository {owner}/{repo_name} already exists — "
-                    f"validating all branches..."
-                )
-
-                # Collect GitLab branches
-                if gitlab_client and gitlab_project_id:
-                    gitlab_branches = gitlab_client.list_branches(gitlab_project_id)
-                else:
-                    # Fallback: only check default branch
-                    gitlab_branches = [default_branch]
-
-                log.info(
-                    f"found {len(gitlab_branches)} GitLab branch(es): "
-                    f"{', '.join(gitlab_branches)}"
-                )
-
-                all_synced, sync_msg = self.compare_all_branches(
-                    repo_name=repo_name,
-                    source_url=source_url,
-                    gitlab_branches=gitlab_branches,
-                    gitlab_token=gitlab_token,
-                    log=log,
-                )
-
-                if all_synced:
-                    log.info("✓ All branches are in sync with GitHub")
-                    if archive_synced and gitlab_client and gitlab_project_id:
-                        log.info(f"archiving GitLab project {gitlab_project_id}...")
-                        if gitlab_client.archive_project(gitlab_project_id):
-                            log.info("✓ GitLab project archived successfully")
-                        else:
-                            log.warning("⚠ Failed to archive GitLab project")
-                    return {"status": "synced", "reason": ""}
-                else:
-                    log.info(
-                        f"GitHub is behind GitLab — resuming migration to sync missing commits..."
-                    )
-                    # Fall through to clone+push below
-
-        # Create the empty GitHub repository (only if it doesn't already exist)
-        if not existing_repo:
-            url = (
-                f"{self.github_api_base}/orgs/{self.github_org}/repos"
-                if self.github_org
-                else f"{self.github_api_base}/user/repos"
+            should_skip, result = self._check_sync_status(
+                repo_name=repo_name,
+                existing_repo=existing_repo,
+                source_url=source_url,
+                gitlab_client=gitlab_client,
+                gitlab_project_id=gitlab_project_id,
+                gitlab_token=gitlab_token,
+                archive_synced=archive_synced,
+                log=log,
             )
-            repo_data: Dict = {"name": repo_name, "private": private, "auto_init": False}
-            if description:
-                repo_data["description"] = description
+            if should_skip:
+                return result
 
-            log.info(f"Creating repository {owner}/{repo_name}...")
-            create_response = requests.post(url, headers=self.headers, json=repo_data)
+        if not existing_repo:
+            race_result = self._create_github_repo(repo_name, private, description, log)
+            if race_result is not None:
+                return race_result
 
-            if create_response.status_code == 201:
-                log.info(f"Repository {owner}/{repo_name} created successfully")
-            elif create_response.status_code == 422:
-                log.warning(f"Repository {owner}/{repo_name} already exists (race condition)")
-                return {"status": "synced", "reason": "Repository appeared during migration"}
-            else:
-                create_response.raise_for_status()
-
-        # Build authenticated clone/push URLs
         clone_url = (
             self._build_authenticated_url(source_url, gitlab_token, username="oauth2")
             if gitlab_token
@@ -693,90 +863,21 @@ class GitHubMigrator:
         mirror_path = os.path.join(tmpdir, repo_name + ".git")
         log.debug(f"tmpdir={tmpdir}")
         try:
-            _cmd = ["git", "clone", "--mirror", clone_url, mirror_path]
-            log.debug(f"$ git clone --mirror {_redact_url(clone_url)} {mirror_path}")
-            log.info(f"Cloning {source_url} ...")
-            clone_result = subprocess.run(
-                _cmd,
-                check=True,
-                capture_output=True,
-                text=True,
-            )
-            log.debug(f"git clone stdout: {clone_result.stdout.strip()}")
-            log.debug(f"git clone stderr: {clone_result.stderr.strip()}")
-
-            # ── Git LFS: fetch existing LFS objects from GitLab ─────────────
-            if enable_lfs and _lfs_available() and self._repo_uses_lfs(mirror_path):
-                log.info("LFS objects detected — fetching all LFS objects from GitLab...")
-                _cmd = ["git", "lfs", "fetch", "--all"]
-                log.debug(f"$ git lfs fetch --all  (cwd={mirror_path})")
-                lfs_fetch_result = subprocess.run(
-                    _cmd,
-                    check=True,
-                    capture_output=True,
-                    text=True,
-                    cwd=mirror_path,
-                    env={**os.environ, "GIT_LFS_SKIP_SMUDGE": "0"},
-                )
-                log.debug(f"git lfs fetch stdout: {lfs_fetch_result.stdout.strip()}")
-                log.debug(f"git lfs fetch stderr: {lfs_fetch_result.stderr.strip()}")
-            elif enable_lfs and not _lfs_available() and self._repo_uses_lfs(mirror_path):
-                log.warning(
-                    "LFS objects detected but git-lfs is NOT installed — "
-                    "LFS pointers will be migrated but binary objects will be MISSING. "
-                    "Install git-lfs and re-run to migrate LFS objects."
-                )
-
-            # ── Git LFS: auto-convert plain blobs > 100 MB to LFS ───────────
-            # GitHub rejects pushes with blobs > 100 MB. If the source repo
-            # stored large files as regular Git objects (not LFS), we rewrite
-            # history here with `git lfs migrate import` before pushing.
-            if enable_lfs and _lfs_available():
-                self._migrate_large_blobs_to_lfs(mirror_path, log)
-            # ─────────────────────────────────────────────────────────────────
-
-            log.info(f"Pushing to {owner}/{repo_name} ...")
-            self._push_in_batches(
+            self._clone_mirror_and_push(
+                source_url=source_url,
+                clone_url=clone_url,
+                github_push_url=github_push_url,
+                repo_name=repo_name,
                 mirror_path=mirror_path,
-                remote_url=github_push_url,
-                log=log,
+                enable_lfs=enable_lfs,
                 commits_per_slice=commits_per_slice,
+                log=log,
             )
-
-            # ── Git LFS push ─────────────────────────────────────────────────
-            if enable_lfs and _lfs_available() and self._repo_uses_lfs(mirror_path):
-                log.info("Pushing LFS objects to GitHub...")
-                _cmd = ["git", "lfs", "push", "--all", github_push_url]
-                log.debug(f"$ git lfs push --all {_redact_url(github_push_url)}  (cwd={mirror_path})")
-                lfs_push_result = subprocess.run(
-                    _cmd,
-                    check=True,
-                    capture_output=True,
-                    text=True,
-                    cwd=mirror_path,
-                )
-                log.debug(f"git lfs push stdout: {lfs_push_result.stdout.strip()}")
-                log.debug(f"git lfs push stderr: {lfs_push_result.stderr.strip()}")
-                log.info("✓ LFS objects pushed successfully")
-            # ─────────────────────────────────────────────────────────────────
-        except subprocess.CalledProcessError as e:
-            stdout = (e.stdout or "").strip()
-            stderr = (e.stderr or "").strip()
-            log.debug(f"git command failed — stdout: {stdout}")
-            log.debug(f"git command failed — stderr: {stderr}")
-            raise RuntimeError(f"git operation failed: {stderr}") from e
         finally:
             shutil.rmtree(tmpdir, ignore_errors=True)
 
         log.info("✓ Migration complete")
-
-        if archive_synced and gitlab_client and gitlab_project_id:
-            log.info(f"archiving GitLab project {gitlab_project_id}...")
-            if gitlab_client.archive_project(gitlab_project_id):
-                log.info("✓ GitLab project archived successfully")
-            else:
-                log.warning("⚠ Failed to archive GitLab project")
-
+        self._maybe_archive(archive_synced, gitlab_client, gitlab_project_id, log)
         return {"status": "complete"}
 
     def migrate_repository(
@@ -786,7 +887,6 @@ class GitHubMigrator:
         gitlab_token: Optional[str] = None,
         private: bool = True,
         description: Optional[str] = None,
-        wait: bool = True,
         gitlab_client: Optional["GitLabClient"] = None,
         gitlab_project_id: Optional[int] = None,
         archive_synced: bool = False,
@@ -834,7 +934,6 @@ class GitHubMigrator:
         self,
         repositories: List[Dict],
         gitlab_token: Optional[str] = None,
-        wait: bool = True,
         gitlab_client: Optional["GitLabClient"] = None,
         archive_synced: bool = False,
         errors_reporter: Optional["ErrorsReporter"] = None,
@@ -873,7 +972,6 @@ class GitHubMigrator:
                 gitlab_token=gitlab_token,
                 private=private,
                 description=description,
-                wait=wait,
                 gitlab_client=gitlab_client,
                 gitlab_project_id=gitlab_project_id,
                 archive_synced=archive_synced,
@@ -922,7 +1020,6 @@ class GitHubMigrator:
         else:
             for repo_config in repositories:
                 _migrate_one(repo_config)
-                if wait:
-                    time.sleep(2)
+                time.sleep(2)
 
         return results
