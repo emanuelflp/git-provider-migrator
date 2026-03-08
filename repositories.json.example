@@ -1,0 +1,14 @@
+[
+  {
+    "gitlab_url": "https://gitlab.com/username/repo1.git",
+    "repo_name": "repo1",
+    "private": true,
+    "description": "Repository 1 migrated from GitLab"
+  },
+  {
+    "gitlab_url": "https://gitlab.com/username/repo2.git",
+    "repo_name": "repo2",
+    "private": false,
+    "description": "Repository 2 migrated from GitLab"
+  }
+]
